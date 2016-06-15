@@ -1,5 +1,10 @@
 package ru.headrich.topjava.model;
 
+import ru.headrich.topjava.DAO.ORMengine.annotations.Column;
+import ru.headrich.topjava.DAO.ORMengine.annotations.Table;
+
+import java.beans.Transient;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
@@ -8,13 +13,18 @@ import java.util.Set;
 /**
  * Created by Montana on 07.06.2016.
  */
-public class User extends NamedEntity {
-
+@Table(name = "user")
+public class User extends NamedEntity implements Serializable {
+    @Column(name = "email")
     private String email;
+    @Column(name = "password")
     private String password;
+    @Column(name = "registered")
     private Date registered=new Date();
+    @Column(name = "enabled")
     private boolean enabled =true;
     private Set<Role> authorities;
+
     private boolean logged = false;
 
 
@@ -25,6 +35,10 @@ public class User extends NamedEntity {
         this.password = password;
         this.enabled=true;
         this.authorities = EnumSet.of(role,roles);
+    }
+
+    public User(String name) {
+        super(name);
     }
 
     public String getEmail() {
@@ -70,7 +84,7 @@ public class User extends NamedEntity {
     public void setRegistered(Date registered) {
         this.registered = registered;
     }
-
+    @Transient
     public boolean isLogged() {
         return logged;
     }

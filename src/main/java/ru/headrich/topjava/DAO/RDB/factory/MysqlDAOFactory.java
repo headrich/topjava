@@ -1,6 +1,8 @@
 package ru.headrich.topjava.DAO.RDB.factory;
 
 import ru.headrich.topjava.DAO.DAOFactory;
+import ru.headrich.topjava.DAO.RDB.userdao.MysqlUserDAO;
+import ru.headrich.topjava.DAO.RDB.usermealdao.MysqlUserMealDAO;
 import ru.headrich.topjava.DAO.UserDAO;
 import ru.headrich.topjava.DAO.UserMealDAO;
 import ru.headrich.topjava.model.UserMeal;
@@ -10,14 +12,16 @@ import ru.headrich.topjava.model.UserMeal;
  */
 public class MysqlDAOFactory extends DAOFactory {
 
+protected final static String driver = "com.mysql.jdbc.Driver";
 
     @Override
     public UserDAO getUserDAO() {
-        return null;
+        return new MysqlUserDAO();
     }
 
     @Override
     public UserMealDAO getUserMealDAO() {
-        return null;
+        return new MysqlUserMealDAO();
     }
+
 }

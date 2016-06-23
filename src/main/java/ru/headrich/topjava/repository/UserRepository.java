@@ -1,7 +1,9 @@
 package ru.headrich.topjava.repository;
 
+import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -12,13 +14,23 @@ import java.util.List;
 
 public interface UserRepository {
 
-    User save(User user);
+    User addUser(User user);
 
-    User get(int id);
+    User getUserById(int id);
 
-    boolean delete(int id);
+    void updateUser(User user);
 
-    User getByEmail(String email);
+    boolean deleteUser(int id);
 
     List<User> getAllUsers();
+
+    User getUserByEmail(String email);
+
+    User getUserByName(String name);
+
+    Collection<User> listUsersByRole(Role role);
+
+
+
+
 }

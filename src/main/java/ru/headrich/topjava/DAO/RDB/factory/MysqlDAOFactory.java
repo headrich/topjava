@@ -16,7 +16,8 @@ protected final static String driver = "com.mysql.jdbc.Driver";
 
     @Override
     public UserDAO getUserDAO() {
-        return new MysqlUserDAO();
+        //return new MysqlUserDAO();
+        return null;
     }
 
     @Override

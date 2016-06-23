@@ -1,9 +1,11 @@
 package ru.headrich.topjava.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Montana on 07.06.2016.
  */
-public class BaseEntity {
+public class BaseEntity implements Serializable{
     public Integer getId() {
         return id;
     }

@@ -5,9 +5,12 @@ import ru.headrich.topjava.DAO.ORMengine.annotations.Table;
 
 import java.beans.Transient;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
+import java.sql.Date;
+
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,15 +18,21 @@ import java.util.Set;
  */
 @Table(name = "user")
 public class User extends NamedEntity implements Serializable {
+   /* @Column(name = "iduser")
+    private int id;
+    @Column(name = "name")
+    private String name;*/
     @Column(name = "email")
     private String email;
     @Column(name = "password")
     private String password;
     @Column(name = "registered")
-    private Date registered=new Date();
+    private Date registered = Date.valueOf(LocalDate.now());
     @Column(name = "enabled")
     private boolean enabled =true;
     private Set<Role> authorities;
+
+    private List<UserMeal> meals;
 
     private boolean logged = false;
 
@@ -35,6 +44,11 @@ public class User extends NamedEntity implements Serializable {
         this.password = password;
         this.enabled=true;
         this.authorities = EnumSet.of(role,roles);
+    }
+
+    public User(){
+        super();
+
     }
 
     public User(String name) {
@@ -69,6 +83,10 @@ public class User extends NamedEntity implements Serializable {
         return authorities;
     }
 
+    public void setAuthorities(Set<Role> authorities) {
+        this.authorities = authorities;
+    }
+
     public void addAuthorities(Role authoritiy) {
        if(authorities==null){
            authorities=EnumSet.of(authoritiy);
@@ -93,14 +111,53 @@ public class User extends NamedEntity implements Serializable {
         this.logged = logged;
     }
 
+    public List<UserMeal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<UserMeal> meals) {
+        this.meals = meals;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "email='" + email + '\'' +
+                "id='"+id+'\''+
+                ",name='"+name+'\''+
+                ",email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", registered=" + registered +
                 ", enabled=" + enabled +
                 ", authorities=" + authorities +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (enabled != user.enabled) return false;
+        if (logged != user.logged) return false;
+        if (!email.equals(user.email)) return false;
+        if (!password.equals(user.password)) return false;
+        if (!registered.equals(user.registered)) return false;
+        if (!authorities.equals(user.authorities)) return false;
+        return meals != null ? meals.equals(user.meals) : user.meals == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = email.hashCode();
+        result = 31 * result + password.hashCode();
+        result = 31 * result + registered.hashCode();
+        result = 31 * result + (enabled ? 1 : 0);
+        result = 31 * result + authorities.hashCode();
+        result = 31 * result + (meals != null ? meals.hashCode() : 0);
+        result = 31 * result + (logged ? 1 : 0);
+        return result;
     }
 }

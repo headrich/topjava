@@ -2,6 +2,7 @@ package ru.headrich.topjava.DAO;
 
 import ru.headrich.topjava.model.User;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 /**
@@ -11,11 +12,12 @@ public interface UserDAO {
 
     //CRUD
 
-    User getUser(int id);
+    User getUser(int id) throws SQLException;
     boolean deleteUser(int id);
     User saveUser(User user);
-    void updaateUser(User user);
-    Collection<User> getAllUsers();
+    void updateUser(User user) throws SQLException;
+    Collection<User> listUsers();
+
 
 
 }

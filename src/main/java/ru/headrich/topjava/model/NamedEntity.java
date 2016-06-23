@@ -17,6 +17,8 @@ public class NamedEntity extends BaseEntity {
         this.name = name;
     }
 
+    public NamedEntity(){}
+
     public String getName() {
         return name;
     }

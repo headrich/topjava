@@ -33,6 +33,9 @@ public class ConnectionManager {
         if(conProps.containsKey("password")) this.password = conProps.getProperty("password");
 
     }
+
+
+
     //меняем параметры соединения. нужен реконнект.
     public void setConnectionProps(Properties properties){
         this.conProps=properties;
@@ -57,23 +60,41 @@ public class ConnectionManager {
     }
 
 
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
+    public Connection getConnection() throws SQLException {
 
-        //проверка на наличие зарегестрированного драйвера
+        //проверка на наличие зарегестрированного драйвера/ лучше убрать отсюдо
         if(connection==null || connection.isClosed()) {
-            Enumeration<Driver> drvs = DriverManager.getDrivers();
+            if(loadDriver())
+            return DriverManager.getConnection(url, username, password);
+        }return connection;
+
+    }
+
+    public boolean loadDriver(){
+        Enumeration<Driver> drvs = DriverManager.getDrivers();
+        if(drvs.hasMoreElements()) {
             while (drvs.hasMoreElements()) {
                 if (drvs.nextElement().getClass().equals(jdbcDriver)) {
                     break;
                 } else {
-                    Class.forName(jdbcDriver);
+                    try {
+                        Class.forName(jdbcDriver);
+                    } catch (ClassNotFoundException e) {
+                        System.out.print("Driver failed"+ e.getMessage());
+                        return false;
+                    }
                     break;
                 }
             }
-
-            return DriverManager.getConnection(url, username, password);
-        }return connection;
-
+        }else{
+            try {
+                Class.forName(jdbcDriver);
+            } catch (ClassNotFoundException e) {
+                System.out.print("Driver failed"+ e.getMessage());
+                return false;
+            }
+        }
+        return true;
     }
 
     public Connection reconnect() throws SQLException, ClassNotFoundException {
@@ -86,14 +107,21 @@ public class ConnectionManager {
         return getConnection();
     }
 
-    public void disconnect() throws SQLException {
+    public void disconnect() {
         if(connection!=null){
-            if(!connection.isClosed()){
-                connection.close();
+            try {
+                if(!connection.isClosed()){
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("CONNECTION ERROR/ CANT disconnect : "+e.getMessage());
             }
         }
 
     }
+
+
+
 
 
 }

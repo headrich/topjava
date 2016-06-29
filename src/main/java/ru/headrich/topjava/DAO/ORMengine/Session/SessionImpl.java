@@ -21,7 +21,6 @@ public class SessionImpl implements Session {
 
     @Override
     public void startTransaction() {
-
     }
 
     @Override

@@ -10,14 +10,14 @@
     </encoder>
 </appender>
     <appender name ="FILEOUT" class="ch.qos.logback.core.FileAppender">
-        <file>..\webapps\top\logs\topjava.log</file>
+        <file>topjava.log</file>
         <encoder>
             <charset>UTF-8</charset>
             <pattern>%d{dd-MM-yyyy HH:MM:SS.SSS} %t %-5level %logger - [%file:%line] : %msg %n  </pattern>
         </encoder>
     </appender>
 
-    <logger name="ru.headrich.topjava" level="debug">
+    <logger name="ru.headrich.topjava" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
     <root level="info" >

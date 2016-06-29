@@ -1,13 +1,7 @@
 package ru.headrich.topjava.DAO;
 
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Properties;
+import java.sql.*;
+import java.util.*;
 
 /**
  * Created by Montana on 09.06.2016.
@@ -20,6 +14,7 @@ public class ConnectionManager {
     private String url;
     private String username;
     private String password;
+
 
     private Properties conProps;
 
@@ -117,6 +112,40 @@ public class ConnectionManager {
                 System.err.println("CONNECTION ERROR/ CANT disconnect : "+e.getMessage());
             }
         }
+
+    }
+
+    public Map<String,List<List<String>>>  getSchema() throws SQLException {
+
+        DatabaseMetaData meta = getConnection().getMetaData();
+        Map<String,List<List<String>>> shemap = new HashMap<>();
+        ResultSet tres = meta.getTables(null,null,"%",null);
+        while (tres.next()) {
+            String tcat = tres.getString(1);
+            String tschema = tres.getString(2);
+            String tname = tres.getString(3);
+            //System.out.println("Table catalog: [" + tcat + "]; schema: [" + tschema + "]; name: [" + tname + "]");
+            //if tablesmap contains tablename
+            ResultSet cres = meta.getColumns(tcat,null,tname,null);
+            List<List<String>> columns = new LinkedList<>();
+            while (cres.next()) {
+                String cname = cres.getString("COLUMN_NAME");
+                String ctype = cres.getString("TYPE_NAME");
+                int csize = cres.getInt("COLUMN_SIZE");
+                //System.out.println("Column name: [" + cname + "]; type: [" + ctype + "]; size: [" + csize + "]");
+                columns.add(Arrays.asList(cname,ctype,String.valueOf(csize)));
+                //if columnlist contains columname
+            }
+            shemap.put(tname,columns);
+        }
+        //else throw ex invalid columname  or skip it in the query
+        //special for field like authorities
+
+        //создать дерево -каталог, (имя таблицы, (имя поля, тип, размер)) - done
+        //потихоньку обобщаем. так круче и интересней
+        disconnect();
+        System.out.println(shemap);
+        return shemap;
 
     }
 

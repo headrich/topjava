@@ -1,17 +1,18 @@
 package ru.headrich.topjava;
 
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import ru.headrich.topjava.DAO.DAOFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.headrich.topjava.DAO.ORMengine.annotations.Column;
-import ru.headrich.topjava.DAO.RDB.RDBBaseDAO;
+import ru.headrich.topjava.DAO.ORMengine.aspects.EntityImplementator;
 import ru.headrich.topjava.model.*;
 
-import javax.naming.Context;
-import java.lang.annotation.Annotation;
 import java.lang.annotation.Native;
 import java.lang.reflect.*;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -34,12 +35,24 @@ public class Main {
     int g;
     @Native
     public String hob;
+    static Logger Log = LoggerFactory.getLogger(Main.class);
 
+    private int asp=0;
     public static void main(String[] args) throws Exception {
 
         System.out.format("Hello Topjava Enterprise!");
+
+        EntityImplementator.Entity entityproxy = (EntityImplementator.Entity) Enhancer.create(User.class,new Class[]{EntityImplementator.Entity.class},new MyInvocationHandler(new User()));
+        //Class[] classes = entityproxy.getClass().getInterfaces();
+        //System.out.println(Arrays.toString(classes));
+        //System.out.println(ClassUtils.getAllInterfaces(entityproxy.getClass())); //тут плюс ко все еще Serializable/т.е. все. c суперклассами
+        //System.out.println(entityproxy.toCacheString());
+        entityproxy.getId();
+
+
+
         //getConnection();
-        System.out.println("FFFF");
+    /*    System.out.println(boolean.class +"  and  " + Boolean.class.getSimpleName());
         User a = new User("asd","1111e","11p",Role.ROLE_ADMIN);
         User b = new User("asd","1111e","11p",Role.ROLE_ADMIN);
         User c = new User("asd","3333e","11p",Role.ROLE_USER);
@@ -51,7 +64,7 @@ public class Main {
         ArrayList<User> l1= new ArrayList<>(Arrays.asList(a,d));
         ArrayList<User> l2= new ArrayList<>(Arrays.asList(b,d));
         System.out.println(new EqualsBuilder().append(l1,l2).isEquals());
-
+        Log.info("FDFSFSFSDF");*/
 
         /*RDBBaseDAO rdbBaseDAO = new RDBBaseDAO() {
             @Override
@@ -77,6 +90,38 @@ public class Main {
         }*/
 
     }
+
+
+    //значит entity можно пилить так.
+    static class MyInvocationHandler implements MethodInterceptor{
+
+        User u;
+        public MyInvocationHandler(User ua) {
+            u = ua;
+        }
+
+        @Override
+        public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+            if(method.getName().contains("getLOB")){
+                System.out.println("Lob is " +getLOB()+ " " +o.getClass().getName() + " :: "+ method.getName());
+
+            }
+            if(method.getName().contains("getId")){
+
+                System.out.println("ID IS "+  getId()+ "  " +o.getClass().getName() + " :: "+ method.getName());
+
+            }
+            return null;
+        }
+        private   Long getId(){
+            return 1L;
+        };
+        private  Long getLOB(){
+            return 2L;
+        };
+    }
+
+
     public <T> int compareStates(T persist, T current){
         //reflection getting allfields
         if(persist!=null && current!=null)

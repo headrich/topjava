@@ -9,6 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE,ElementType.CONSTRUCTOR})
 public @interface Table {
-String name() default "";
+
+    String name() default "";
 
 }

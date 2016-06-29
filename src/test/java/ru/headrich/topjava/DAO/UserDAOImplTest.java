@@ -1,6 +1,7 @@
 package ru.headrich.topjava.DAO;
 
 import junit.framework.TestCase;
+import org.junit.Before;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.model.UserMeal;
@@ -17,10 +18,10 @@ import java.util.Properties;
 //C ТЕСТАМИ ВЕСЕЛЕЕ ПРОГАТЬ ТАК КАК СРАЗУ ПРОВЕРИЛ ЧЕ КАК, А НЕ НА АБУМ)))) ТЕРЬ БУДУ ТЕСТЫ ПИСАТЬ ЧАЩЕ
 public class UserDAOImplTest extends TestCase {
 
-    static UserDAOImpl userDAO = new UserDAOImpl();
-    static UserMealDAOImpl userMealDAO = new UserMealDAOImpl();
+    static UserDAO userDAO;
+    static UserMealDAO userMealDAO;
 
-    static{
+   /* static{
         Properties cp = new Properties();
         cp.setProperty("url","jdbc:mysql://localhost:3306/calories?allowMultiQueries=true");
         cp.setProperty("username","root");
@@ -28,6 +29,13 @@ public class UserDAOImplTest extends TestCase {
         cp.setProperty("driver","com.mysql.jdbc.Driver");
         userDAO.setCm(ConnectionManager.getInstance(cp));
         userMealDAO.setCm(ConnectionManager.getInstance(cp));
+    }*/
+
+    @Before
+    public void init() {
+        //load config should be there
+        userDAO = SimpleDAOFactory.getInstance().getUserDAO();
+        userMealDAO = SimpleDAOFactory.getInstance().getUserMealDAO();
     }
 
     public void testGetUser() throws Exception {

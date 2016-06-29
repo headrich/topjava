@@ -39,6 +39,7 @@ public class MappingUtil {
 
                 }
             }
+            //если что-то пометили а что-то нет, то собираем только то что пометили, иначе все сразу.
             if(cnt==0)columnNames.addAll( (List<String>)Arrays.asList(obj.getClass().getDeclaredFields()).stream().map(value -> value.getName()));
         }else throw new Exception("not defined entity");
 

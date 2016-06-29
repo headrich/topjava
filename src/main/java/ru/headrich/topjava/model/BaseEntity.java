@@ -14,9 +14,11 @@ public class BaseEntity implements Serializable{
         this.id = id;
     }
 
-    protected Integer id;
+    public Integer id;
 
     public boolean isNew(){
         return(this.id ==null);
     }
+
+
 }

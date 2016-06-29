@@ -21,7 +21,8 @@ public interface Session {
     Transaction getTransaction();
 
     //crud
-    //
+
+
 
 
 }

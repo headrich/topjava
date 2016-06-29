@@ -1,6 +1,5 @@
 package ru.headrich.topjava.DAO;
 
-import com.mysql.jdbc.Field;
 import com.mysql.jdbc.Statement;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -8,8 +7,6 @@ import ru.headrich.topjava.DAO.ORMengine.proxy.SimpleCloner;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.model.UserMeal;
-import ru.headrich.topjava.util.ConfigLoader;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 
 import java.io.IOException;
 import java.sql.*;
@@ -22,22 +19,24 @@ import java.util.*;
 //сделать хэширование паролей
     //сделать подтягивание из связных таблиц РОЛИ + (удаление там каскадное)
     //сделать нормально и качественно
-    //написать тесты с Junit!!
+    //написать тесты с Junit!!++
+
+    //Тут у нас будет
 public  class UserDAOImpl implements UserDAO {
     StateHolder session ;
     static ConnectionManager cm;
     static{
-       /* Properties cp = new Properties();
+        Properties cp = new Properties();
         cp.setProperty("url","jdbc:mysql://localhost:3306/calories?allowMultiQueries=true");
         cp.setProperty("username","root");
         cp.setProperty("password","root");
-        cp.setProperty("driver","com.mysql.jdbc.Driver");*/
-        Properties cp = null;
-        try {
+        cp.setProperty("driver","com.mysql.jdbc.Driver");
+        //Properties cp = null;
+        /*try {
             cp = new Properties(ConfigLoader.loadProps());
         } catch (IOException e) {
             System.out.println("Load config error;" + e.getMessage());
-        }
+        }*/
         cm = ConnectionManager.getInstance(cp);
 
     }
@@ -50,6 +49,35 @@ public  class UserDAOImpl implements UserDAO {
 
     public UserDAOImpl() {
         session = new StateHolder();
+    }
+
+    //checking table-column names by schema
+    public static boolean validateTable() throws SQLException {
+        /*
+        if field has collection type/ then it is other table/
+            полученную карту орм можно сравнить с этой схемой.
+         */
+
+        Connection conn = cm.getConnection();
+
+        DatabaseMetaData meta = conn.getMetaData();
+        String cat="";
+
+        Map<String,List<List<String>>> shemap = cm.getSchema();
+
+        //else throw ex invalid columname  or skip it in the query
+        //special for field like authorities
+
+        //создать дерево -каталог, (имя таблицы, (имя поля, тип, размер)) - done
+        //потихоньку обобщаем. так круче и интересней
+        conn.close();
+        System.out.println(shemap);
+
+        return false;
+    }
+
+    public static void main(String[] args) throws SQLException {
+        validateTable();
     }
 
 //TODO тут и будет у нас храниться инфа о состоянии текущего соединения, сущностей, и т.д.
@@ -65,7 +93,22 @@ Though Hibernate session has a state, under properly configured transaction mana
 
 So, your DAOs are effectively stateless, and should be singleton-scoped (i.e. default scope).
      */
-    class StateHolder<T>{
+
+    /*stateholder  у меня как спутник сессии, он хранит в себе состояния и изменения
+    создаваться он будет у нас при получении сессии. блять как-то сессии сделать надо.
+    сессии у нас есть в jsp/ пришел пользователь, ковыряется по страницам, и работает с базой.
+    он работает с базой в рамках http сессии, при этом с базой он работает в рамках той же сессии или
+    же
+
+    ВОТ! получаем соединение с бд, создаем сессию .
+     чекаем изменения.
+     закарываем соединение, закрываем сессию. это наверно в случае с работой с бд.
+        а если в сервлете.
+
+
+
+     */
+    public class StateHolder<T>{
 
         private T obj;
         private User persistUser;
@@ -127,7 +170,10 @@ So, your DAOs are effectively stateless, and should be singleton-scoped (i.e. de
 
         }
 
+        public  void fetchMap(Map<List<String>,? super Object> m){
+            //fieldsToUpdate = m;
 
+        }
 
     }
 
@@ -155,6 +201,9 @@ So, your DAOs are effectively stateless, and should be singleton-scoped (i.e. de
     //executeQuery для получения ResultSet набора данных( оператор SELECT)
 
     //можно будет поробовать придумать ленивую загрузку. Подтягивать или не подтягивать сущности по внешнему ключу.
+
+
+
     @Override
     public User getUser(int id)  {
         PreparedStatement st=null;
@@ -612,10 +661,20 @@ So, your DAOs are effectively stateless, and should be singleton-scoped (i.e. de
         Connection connection = null;
         //PreparedStatement updateUser = null;
         //PreparedStatement updateUserRole = null;
+        String query;
+        //session.fieldsToUpdate.
+
+
+        //ПИШЕМ ПОДСТАНОВКУ!
+        Map<String,List<List<String>>> shemap = cm.getSchema();
+        //session.fieldsToUpdate
+        String updateQuery = "";
+        //session.fieldsToUpdate.containsKey()
 
         try {
             connection = cm.getConnection();
             connection.setAutoCommit(false);
+
             try(PreparedStatement updateUser = connection.prepareStatement("UPDATE user set name=?, email=?, password=?, enabled=?, registered=? WHERE iduser=?");) {
                 updateUser.setString(1, user.getName());
                 updateUser.setString(2, user.getEmail());

@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(name = "user")
 public class User extends NamedEntity implements Serializable {
    /* @Column(name = "iduser")
-    private int id;
+    private Integer id;
     @Column(name = "name")
     private String name;*/
     @Column(name = "email")
@@ -30,6 +30,7 @@ public class User extends NamedEntity implements Serializable {
     private Date registered = Date.valueOf(LocalDate.now());
     @Column(name = "enabled")
     private boolean enabled =true;
+
     private Set<Role> authorities;
 
     private List<UserMeal> meals;
@@ -44,6 +45,7 @@ public class User extends NamedEntity implements Serializable {
         this.password = password;
         this.enabled=true;
         this.authorities = EnumSet.of(role,roles);
+
     }
 
     public User(){
@@ -55,10 +57,12 @@ public class User extends NamedEntity implements Serializable {
         super(name);
     }
 
-    public String getEmail() {
+     public String getEmail() {
         return email;
     }
 
+
+    @MAT
     public void setEmail(String email) {
         this.email = email;
     }
@@ -94,7 +98,13 @@ public class User extends NamedEntity implements Serializable {
            authorities.add(authoritiy);
        }
     }
-
+    public void setBorsch(){
+        System.out.println("SET BORSCH");
+    }
+    public String getBorsch(){
+        System.out.println("GET BORSCH");
+        return "GET BORSCH";
+    }
     public Date getRegistered() {
         return registered;
     }

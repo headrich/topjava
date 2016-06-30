@@ -1,5 +1,7 @@
 package ru.headrich.topjava;
 
+import ru.headrich.topjava.util.converters.PasswordEncryption;
+
 /**
  * User: gkislin
  * Date: 05.08.2015
@@ -9,7 +11,10 @@ package ru.headrich.topjava;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         System.out.format("Hello Topjava Enterprise!");
+        String hashp = PasswordEncryption.getEncryptor().getHash("201941monstr");
+        System.out.println(hashp);
+
     }
 }

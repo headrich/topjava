@@ -1,5 +1,6 @@
 package ru.headrich.topjava.model;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
@@ -8,13 +9,28 @@ import java.util.Set;
 /**
  * Created by Montana on 07.06.2016.
  */
+
+
+
+@Entity
+@Table(name="user")
+@AttributeOverride(name = "id",column = @Column(name = "iduser"))
 public class User extends NamedEntity {
 
+
+
+    @Basic
     private String email;
+    @Basic
     private String password;
+    @Basic
+    @Convert(converter = ru.headrich.topjava.util.converters.MysqlDateConverter.class)
     private Date registered=new Date();
+    @Basic
     private boolean enabled =true;
+    @ManyToMany(mappedBy = "user")
     private Set<Role> authorities;
+    @Transient
     private boolean logged = false;
 
 
@@ -25,6 +41,7 @@ public class User extends NamedEntity {
         this.password = password;
         this.enabled=true;
         this.authorities = EnumSet.of(role,roles);
+
     }
 
     public String getEmail() {

@@ -14,7 +14,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
         System.out.format("Hello Topjava Enterprise!");
         String hashp = PasswordEncryption.getEncryptor().getHash("201941monstr");
-        System.out.println(hashp);
+        System.out.println(PasswordEncryption.getEncryptor().authenticate("201941monstr",hashp));
+
 
     }
 }

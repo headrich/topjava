@@ -1,10 +1,10 @@
 package ru.headrich.topjava.model;
 
+import ru.headrich.topjava.util.converters.BooleanToIntegerConverter;
+import ru.headrich.topjava.util.converters.PasswordConverter;
+
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Montana on 07.06.2016.
@@ -22,14 +22,28 @@ public class User extends NamedEntity {
     @Basic
     private String email;
     @Basic
+    @Convert(converter = PasswordConverter.class)
     private String password;
+    @Basic
+    private String salt;
     @Basic
     @Convert(converter = ru.headrich.topjava.util.converters.MysqlDateConverter.class)
     private Date registered=new Date();
     @Basic
+    @Convert(converter = BooleanToIntegerConverter.class)
     private boolean enabled =true;
+
     @ManyToMany(mappedBy = "user")
+    @JoinTable(
+            name = "authority",
+            joinColumns = @JoinColumn(name="user",referencedColumnName = "iduser"),
+            inverseJoinColumns = @JoinColumn(name = "authority",referencedColumnName = "idrole")
+            )
     private Set<Role> authorities;
+    @OneToMany(mappedBy = "user")
+    private List<UserMeal> meals;
+
+
     @Transient
     private boolean logged = false;
 
@@ -42,6 +56,18 @@ public class User extends NamedEntity {
         this.enabled=true;
         this.authorities = EnumSet.of(role,roles);
 
+    }
+
+    public void setAuthorities(Set<Role> authorities) {
+        this.authorities = authorities;
+    }
+
+    public List<UserMeal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<UserMeal> meals) {
+        this.meals = meals;
     }
 
     public String getEmail() {
@@ -58,6 +84,14 @@ public class User extends NamedEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public boolean isEnabled() {

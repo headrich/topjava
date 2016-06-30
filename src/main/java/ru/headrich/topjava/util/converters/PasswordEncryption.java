@@ -1,5 +1,6 @@
 package ru.headrich.topjava.util.converters;
 
+import com.sun.istack.internal.Nullable;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.security.NoSuchAlgorithmException;
@@ -175,6 +176,11 @@ public class PasswordEncryption {
             return authenticate(password.toCharArray(), token);
         }
 
+        @Override
+        public String decode(String hash, @Nullable String salt) {
+            return null;
+        }
+
     }
 
 
@@ -207,6 +213,11 @@ public class PasswordEncryption {
             return hashOfInput.equals(saltAndPass[1]);
         }
 
+        @Override
+        public String decode(String hash, @Nullable String salt) {
+            return null;
+        }
+
         // using PBKDF2 from Sun, an alternative is https://github.com/wg/scrypt
         // cf. http://www.unlimitednovelty.com/2012/03/dont-use-bcrypt.html
         private  String hash(String password, byte[] salt) throws Exception {
@@ -232,6 +243,11 @@ public class PasswordEncryption {
         @Override
         public boolean authenticate(String password, String salt) throws Exception {
             return BCrypt.checkpw(password, salt);
+        }
+
+        @Override
+        public String decode(String hash, @Nullable String salt) {
+            return null;
         }
     }
 

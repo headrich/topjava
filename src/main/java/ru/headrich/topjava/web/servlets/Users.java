@@ -10,6 +10,7 @@ import java.io.IOException;
  * Created by Montana on 08.06.2016.
  */
 public class Users extends HttpServlet {
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }

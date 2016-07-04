@@ -10,21 +10,27 @@ import java.util.List;
  * Created by Montana on 07.06.2016.
  */
 public interface UserMealRepository {
-    UserMeal addMeal(UserMeal userMeal);
+    UserMeal addMeal(UserMeal userMeal,int iduser);
 
     List<UserMeal> getAllMeals();
 
+    List<UserMeal> getAllUserMeals(int iduser);
+
     boolean deleteMeal(int id);
 
-    UserMeal get(int id);
+    //if composite priamry key( int id,user id) но нужно ли это? //
+    //если это будет сервис где будут еще просто продукты, или они будут от админа? вообщем-то можно и так
+    // но может и быть так типа калоризатора, чтоб добавить продуктов, но не удалять  при удалении пользователя например.!!
+    //ведь это просто продукты, а не те что схавал человек.
+    //вполне можно сделат модерацию,а продукты-просто продукты приписывать главному админу.
+    // UserMeal getMeal(int id,int iduser);
+    UserMeal getMeal(int id);
 
-    Collection<UserMeal> getByDate(Date date);
+    Collection<UserMeal> getByDate(Date date, int iduser);
 
-    Collection<UserMeal> getByDateRange(Date start, Date end);
+    Collection<UserMeal> getByDateRange(Date start, Date end, int iduser);
 
-    Collection<UserMeal> getByCalories(int calories);
-
-    Collection<UserMeal> getByCaloriesRange(int min,int max);
+    Collection<UserMeal> getByCaloriesRange(int min,int max,int iduser);
 
 
 

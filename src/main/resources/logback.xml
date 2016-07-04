@@ -24,7 +24,7 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILEOUT"/>
     </root>
-
+    <logger name="org.hibernate" level="info" />
 
 
 </configuration>

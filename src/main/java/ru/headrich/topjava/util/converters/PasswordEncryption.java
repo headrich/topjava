@@ -160,7 +160,7 @@ public class PasswordEncryption {
         @Deprecated
         public String getHash(String password)
         {
-            return getHash(password.toCharArray());
+            return (password!=null) ? getHash(password.toCharArray()) : "";
         }
 
         /**

@@ -121,6 +121,7 @@ public class PasswordEncryption {
          */
         public boolean authenticate(char[] password, String token)
         {
+
             Matcher m = layout.matcher(token);
             if (!m.matches())
                 throw new IllegalArgumentException("Invalid token format");

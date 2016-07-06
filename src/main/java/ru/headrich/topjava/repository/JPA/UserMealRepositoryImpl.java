@@ -2,6 +2,7 @@ package ru.headrich.topjava.repository.JPA;
 
 import org.hibernate.Session;
 import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.NamedQuery;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.model.UserMeal;

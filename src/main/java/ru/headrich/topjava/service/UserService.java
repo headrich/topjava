@@ -20,4 +20,10 @@ public interface UserService {
     List<User> getAllUsers();
 
     void update(User user)throws NotFoundException;
+
+    User getByName(String username);
+
+    boolean authentificateUser(User u,String password) throws Exception;
+
+    boolean isUpdated();
 }

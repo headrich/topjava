@@ -28,11 +28,13 @@ import static ru.headrich.topjava.model.User.ALL;
 @NamedNativeQuery(name = User.ByEmail,query = "SELECT * from user u where u.email=:email",resultClass = User.class,
         hints =@QueryHint(name = "javax.persistence.query.timeout",value = "5000") )
 @NamedQueries({
+        @NamedQuery(name = User.ByName, query = "select u from User u where u.name=:name"),
         @NamedQuery(name = User.DELETE,query ="delete from User u where u.id=:id"),
         @NamedQuery(name=User.ALL,query = "select u from User u",hints = {@QueryHint(name = "javax.persistence.loadgraph",value="userRoleGraph")})
 })
 @NamedEntityGraph(name = "userRoleGraph", attributeNodes = @NamedAttributeNode("authorities"))
 @FetchProfile(name = "userMealsFP",fetchOverrides = @FetchProfile.FetchOverride(entity = User.class,association = "meals",mode = FetchMode.JOIN))
+
 //@NamedEntityGraph - именные графы https://docs.oracle.com/javaee/7/tutorial/persistence-entitygraphs002.htm#BABFIGEI
 //  пример с  подграфами и http://www.thoughts-on-java.org/jpa-21-entity-graph-part-2-define/
 //в хибернейте для этого есть @FetchProfile http://www.concretepage.com/hibernate/fetchprofile_hibernate_annotation -
@@ -54,7 +56,8 @@ public class User extends NamedEntity {
     public static final String ALL = "User.getAll";
     public static final String DELETE = "User.deleteOne";
     public static final String ByEmail = "User.getByEmail";
-//@Basic выставляется по умолчанию всем, потмоу есил нужно че-то не сохранять- @Transient
+    public static final String ByName = "User.getByName";
+    //@Basic выставляется по умолчанию всем, потмоу есил нужно че-то не сохранять- @Transient
 // @Basic используется для основных типов(которые поддерживают различные бд).есть табличка. @Basic собирает имя атрибута
 // By default all Basic mappings are EAGER. Можно устанвоить Lazy
 // /@Column для того чтобы установить специфичное имя и параметры типа для бд

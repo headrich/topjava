@@ -154,6 +154,24 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User getByName(String name) {
+        EntityManager em = JPAHandlerUtil.getWorkingEntityManager();
+
+        List<User> users = null;
+
+        try {
+            Session s = em.unwrap(Session.class);
+
+
+            users = em.createNamedQuery(User.ByName,User.class).setParameter("name",name).getResultList();
+        }catch (Exception e ){
+            //log
+            System.out.println(e.getMessage());
+        }
+        return users.stream().findFirst().orElse(null);
+    }
+
+    @Override
     public List<User> getAllUsers() {
         EntityManager em = JPAHandlerUtil.getWorkingEntityManager();
 

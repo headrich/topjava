@@ -23,6 +23,7 @@ public class UserRepositoryImplTest {
     UserRepository userR;
     UserMealRepository userMealR;
 
+    //// TODO: 04.07.2016  Create testparameters to process any entity states(transient,removed,persistent,detached) its great  
     @Before
     public void setUp() throws Exception {
         userR = new UserRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory());

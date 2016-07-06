@@ -1,7 +1,9 @@
 package ru.headrich.topjava.service;
 
 import ru.headrich.topjava.model.User;
+import ru.headrich.topjava.repository.JPA.UserRepositoryImpl;
 import ru.headrich.topjava.repository.UserRepository;
+import ru.headrich.topjava.util.converters.PasswordEncryption;
 import ru.headrich.topjava.util.exception.NotFoundException;
 
 import java.util.List;
@@ -13,33 +15,50 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
+    public UserServiceImpl(UserRepository userRepository) {
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public User save(User user) {
-        return null;
+        return userRepository.save(user);
     }
 
     @Override
     public User get(int id) throws NotFoundException {
-        return null;
+        return userRepository.get(id);
     }
 
     @Override
     public void remove(int id) throws NotFoundException {
-
+        userRepository.delete(id);
     }
 
     @Override
     public User getByEmail(String email) throws NotFoundException {
-        return null;
+        return userRepository.getByEmail(email);
     }
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        return userRepository.getAllUsers();
     }
 
     @Override
     public void update(User user) throws NotFoundException {
+        userRepository.save(user);
+    }
 
+    @Override
+    public User getByName(String username) {
+        return userRepository.getByName(username);
+    }
+
+    @Override
+    public boolean authentificateUser(User u, String password) throws Exception {
+        return PasswordEncryption.getEncryptor().authenticate(password,u.getPassword());
     }
 }

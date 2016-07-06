@@ -1,6 +1,7 @@
 package ru.headrich.topjava.web.servlets;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by Montana on 07.06.2016.
  */
+@WebServlet("/index.html")
 public class HomeServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(HomeServlet.class);
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,6 +29,7 @@ public class HomeServlet extends HttpServlet {
             LOG.error("OutputStrehhham error",e);
             e.printStackTrace();
         }
+        request.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(request,response);
 
     }
 }

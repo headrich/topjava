@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by Montana on 07.06.2016.
  */
-@WebServlet("/index.html")
+
+//scopes http://www.javajee.com/application-request-session-and-page-scopes-in-servlets-and-jsps
+@WebServlet(urlPatterns = "/index.html")
 public class HomeServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(HomeServlet.class);
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

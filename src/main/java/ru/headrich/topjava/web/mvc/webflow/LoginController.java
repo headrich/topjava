@@ -87,6 +87,7 @@ public class LoginController extends HttpServlet {
                 }
                 s.setAttribute("meals", user.getMeals());
                 resp.sendRedirect("meals");
+                System.out.println("after SendRedirect to meals");
 
             }else {
                 resp.getWriter().append("<p><font size=\"5\" color=\"red\" face=\"Arial\"> Login faild, invalid username or password. Try again. </font> </p>");
@@ -112,8 +113,16 @@ public class LoginController extends HttpServlet {
         HttpSession curSession = req.getSession(false);
         if(curSession!=null) curSession.invalidate();
 
-       resp.sendRedirect("login"); //there is url  top/ req.getservletpath return /login but getrequri returns /top/login with 302 error
+        //resp.getWriter().append(" Good bye ");
+        //resp.sendRedirect("login");
+        getServletContext().getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req,resp);
+
+
+       // resp.setStatus(200);
+        //String url = req.getRequestURL().toString();
+        //resp.sendRedirect(url.substring(0,url.lastIndexOf("/logout"))+"/login"); //there is url  top/ req.getservletpath return /login but getrequri returns /top/login with 302 error
         //getServletContext().getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req,resp); no 302 error
 
     }
+
 }

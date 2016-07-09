@@ -26,6 +26,8 @@ public interface UserMealRepository {
     // UserMeal getMeal(int id,int iduser);
     UserMeal getMeal(int id);
 
+    boolean updateMeal(UserMeal userMeal);
+
     Collection<UserMeal> getByDate(Date date, int iduser);
 
     Collection<UserMeal> getByDateRange(Date start, Date end, int iduser);

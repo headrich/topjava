@@ -6,7 +6,28 @@
          version="3.1">
 
     <display-name>TOPJAVA</display-name>
-    <servlet>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern></url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>IsModelUpdatingFilter</filter-name>
+        <url-pattern></url-pattern>
+    </filter-mapping>
+
+    <resource-ref>
+        <res-ref-name>jdbc/topjava</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+    <!-- В общем соль в том что корень директория -webapp. В ней и лежит фалй сервлета index.
+        Web-inf для метаинформации о веб -приложении, потому там файл web.xml. -->
+    <!--<servlet>
         <servlet-name>Home</servlet-name>
         <servlet-class>ru.headrich.topjava.web.servlets.HomeServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
@@ -15,7 +36,7 @@
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
 
     <!--  <servlet>
          <servlet-name>Users</servlet-name>
@@ -44,6 +65,7 @@
         <servlet-class>ru.headrich.topjava.web.mvc.webflow.LoginController</servlet-class>
         <load-on-startup>0</load-on-startup>
         <jsp-file>/WEB-INF/jsp/login.jsp</jsp-file>
+
     </servlet>
     <servlet-mapping>
 
@@ -72,8 +94,6 @@
 
 
 
-    <welcome-file-list>
-        <welcome-file>/index.jsp</welcome-file>
-    </welcome-file-list>
+
 
 </web-app>

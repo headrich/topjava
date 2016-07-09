@@ -3,12 +3,12 @@
  */
 var controllerUrl = "top/meals";
 
-$(".editRow").onclick(function(){
+$(".editRow").click(function(){
     $("#editRowModal").modal();
 
 });
 
-$(".removeRow").onclick(function(){
+$(".removeRow").click(function(){
     $("#editRowModal").modal();
 
 });

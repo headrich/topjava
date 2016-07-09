@@ -18,6 +18,10 @@ public class UserMealServiceImpl implements UserMealService {
         this.userMealRepository = userMealRepository;
     }
 
+    public UserMealServiceImpl(UserMealRepository userMealRepository) {
+        this.userMealRepository = userMealRepository;
+    }
+
     @Override
     public UserMeal addMeal(UserMeal userMeal) {
         return null;

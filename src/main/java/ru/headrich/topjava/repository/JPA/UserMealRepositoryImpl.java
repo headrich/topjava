@@ -1,6 +1,7 @@
 package ru.headrich.topjava.repository.JPA;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.NamedQuery;
 import ru.headrich.topjava.model.Role;
@@ -130,9 +131,9 @@ public class UserMealRepositoryImpl implements UserMealRepository {
             //em.remove(um);
             deleted = em.createNamedQuery(UserMeal.DELETE).setParameter("id",id).executeUpdate()!=0;
             //s= (Session) em.getDelegate();
-            //s.delete(s.load(UserMeal.class,id));
+            //s.deleteUser(s.load(UserMeal.class,id));
 
-            //TODO check s.delete(usermeal);
+            //TODO check s.deleteUser(usermeal);
             //s.close();
             etr.commit();
 
@@ -169,6 +170,33 @@ public class UserMealRepositoryImpl implements UserMealRepository {
             currentConnection=s.disconnect();
         }
         return um;
+    }
+
+    @Override
+    //TODO ну одинаковый код же с юзером, дженерик дао нужен все таки. Не повторяйте дао + аоп внедрение всех этих транзакций-манипуляций или spring data это тема.
+    public boolean updateMeal(UserMeal userMeal) {
+        boolean updated=false;
+        Session s = emf.createEntityManager().unwrap(Session.class);
+        //Session s1 = JPAHandlerUtil.buildSessionFactory().getCurrentSession();
+        //todo is this session equals session retrived by unwraping em??
+        System.out.println("sessions emf vs sf   s equals s1  : " +s.equals(JPAHandlerUtil.buildSessionFactory().getCurrentSession()));
+        Transaction transaction = s.beginTransaction();
+        try{
+            transaction.begin();
+            s.update(userMeal);
+            transaction.commit();
+            updated=true;
+        }catch (Exception e ){
+            transaction.rollback();
+            updated =false;
+            System.out.println(e.getMessage());
+        }finally {
+            //todo if session close then try-wuthresourceblock else disconnect ??
+            Connection connection = s.disconnect();
+
+        }
+
+        return updated;
     }
 
     @Override

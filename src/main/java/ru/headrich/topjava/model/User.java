@@ -23,6 +23,10 @@ import static ru.headrich.topjava.model.User.ALL;
 
 @Access(value = AccessType.FIELD)
 @Entity
+//моя фича по обновлению только измененных полей - http://www.mkyong.com/hibernate/hibernate-dynamic-update-attribute-example/
+// , как реализована хз,либо через встраивание байткода либо через лругие прокси, либо хиберовские внутренние механизмы событий и слушателей ,
+// типа онфлушдерти и сверка значений полей.
+@DynamicUpdate //hiber api
 @Table(name="user")
 @AttributeOverride(name = "id",column = @Column(name = "iduser"))
 @NamedNativeQuery(name = User.ByEmail,query = "SELECT * from user u where u.email=:email",resultClass = User.class,

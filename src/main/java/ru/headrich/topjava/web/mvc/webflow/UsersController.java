@@ -30,10 +30,20 @@ public class UsersController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession(false);
-        if(session.getAttribute("userList")==null ){//but how to update? - hibernate interceptors! or filters on edit/update urls
-        session.setAttribute("userList",us.getAllUsers());
-        }
+        /*HttpSession session = req.getSession(false);
+        if(session.getAttribute("userList")==null ){//but how to update? - hibernate interceptors!(JPA eventListeners) - но как пробросить изменения -никак
+            // or javaInterceptors to service or repository flow
+            // or Servlet filters on edit/update urls
+            //and // TODO: 06.07.2016  Если я хочу хранит в сесси эти списки , то если будут много пользователей - это сожрет всю память.
+            // - можно сделать кеширование  и хранить все так, но зачем если все и так в бд хранится. Потому нужно хранить такие данные как списки, не
+            // в персональной для каждого клиента шттпсессии, а  одним объектом на всех. только вот выдават ьим копии, а при изменениях, аттачить.
+            //http://programmers.stackexchange.com/questions/214772/storing-large-data-in-http-session-java-application
+            //https://gopalakrishnadurga.wordpress.com/2012/06/08/filter-vs-interceptor/
+
+            session.setAttribute("userList",us.getAllUsers());
+        }*/
+
+        req.setAttribute("userlist",us.getAllUsers());
         req.getRequestDispatcher("/WEB-INF/jsp/users.jsp").include(req,resp);
 
         //super.doGet(req, resp);

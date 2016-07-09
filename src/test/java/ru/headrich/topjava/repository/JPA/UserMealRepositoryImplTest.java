@@ -43,7 +43,7 @@ public class UserMealRepositoryImplTest {
 
     @Test
     public void addMeal() throws Exception {
-                //m.setUser(userR.get(46));
+                //m.setUser(userR.getUser(46));
             assertEquals(userMealR.addMeal(m,1).getId().intValue(),51);
     }
 

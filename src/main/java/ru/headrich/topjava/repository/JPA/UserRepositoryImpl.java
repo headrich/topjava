@@ -4,6 +4,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 
+import org.hibernate.Transaction;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.model.UserMeal;
 import ru.headrich.topjava.repository.UserRepository;
@@ -33,9 +34,10 @@ public class UserRepositoryImpl implements UserRepository {
         this.emf = emf;
     }
 
+    //TODO ТУТ ВЕЗДЕ ДЕТАЧЕД ОБХЕКТЫ передаются и используются.
     //нужно помнить об анитпаттерне session per operation и сделать как -то классно.
     @Override
-    public User save(User user) {
+    public User addUser(User user) {
         EntityManager em = JPAHandlerUtil.getWorkingEntityManager();
         if(s==null || !s.isOpen()) {
             s=em.unwrap(Session.class);
@@ -63,7 +65,7 @@ public class UserRepositoryImpl implements UserRepository {
     //манипуляции позволяют контролировать число запросов к базе. И получать нужную выборку за n число запросов
     //hints : fetchgraph - игнор дефаулт. loadgraph - добавляем к дефолтному.
     @Override
-    public User get(int id) {
+    public User getUser(int id) {
         EntityManager em = JPAHandlerUtil.getWorkingEntityManager();
         User u = null;
         try {
@@ -107,9 +109,36 @@ public class UserRepositoryImpl implements UserRepository {
         return u;
     }
 
+    @Override
+    //hiberstyle
+    public boolean updateUser(User user) {
+        boolean updated=false;
+        Session s = emf.createEntityManager().unwrap(Session.class);
+        //Session s1 = JPAHandlerUtil.buildSessionFactory().getCurrentSession();
+        //todo is this session equals session retrived by unwraping em??
+        System.out.println("sessions emf vs sf   s equals s1  : " +s.equals(JPAHandlerUtil.buildSessionFactory().getCurrentSession()));
+        Transaction transaction = s.beginTransaction();
+        try{
+            transaction.begin();
+            s.update(user);
+            transaction.commit();
+            updated=true;
+        }catch (Exception e ){
+            transaction.rollback();
+            updated =false;
+            System.out.println(e.getMessage());
+        }finally {
+            //todo if session close then try-wuthresourceblock else disconnect ??
+            Connection connection = s.disconnect();
+
+        }
+
+        return updated;
+    }
+
 
     @Override
-    public boolean delete(int id) {
+    public boolean deleteUser(int id) {
         EntityManager em = JPAHandlerUtil.getWorkingEntityManager();
         boolean deleted=false;
         //for JTA transactions only

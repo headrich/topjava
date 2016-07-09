@@ -12,11 +12,11 @@ import java.util.List;
 
 public interface UserRepository {
 
-    User save(User user);
+    User addUser(User user);
 
-    User get(int id);
-
-    boolean delete(int id);
+    User getUser(int id);
+    boolean updateUser(User user);
+    boolean deleteUser(int id);
 
     User getByEmail(String email);
     User getByName(String name);

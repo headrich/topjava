@@ -43,17 +43,17 @@ public class UserRepositoryImplTest {
 
     @Test
     public void save() throws Exception {
-        assertTrue(userR.save(u).getMeals().get(0).getId()!=null);
+        assertTrue(userR.addUser(u).getMeals().get(0).getId()!=null);
     }
 
     @Test
     public void get() throws Exception {
-        assertTrue(userR.get(1)!=null);
+        assertTrue(userR.getUser(1)!=null);
     }
 
     @Test
     public void delete() throws Exception {
-        assertTrue(userR.delete(39));
+        assertTrue(userR.deleteUser(39));
     }
 
     @Test

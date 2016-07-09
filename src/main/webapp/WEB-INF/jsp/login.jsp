@@ -1,4 +1,4 @@
-<%@page contentType="text/html; utf-8" pageEncoding="utf-8" %>
+<%@page contentType="text/html; UTF-8" pageEncoding="utf-8" %>
 <html>
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -40,7 +40,7 @@
 <script type="text/javascript">
     var sendPostRequest = function(){
         var ajax = new XMLHttpRequest();
-        ajax.open("POST","/login",true);
+        ajax.open("POST","/logitn",true);
         ajax.send();
     }
     button.addEventListener("onSubmit",sendPostRequest)

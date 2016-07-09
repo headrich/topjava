@@ -15,6 +15,7 @@ import java.util.Date;
  */
 @Access(value = AccessType.FIELD)
 @Entity
+@DynamicUpdate
 @Table(name = "meal")
 @AttributeOverride(name = "id",column = @Column(name = "idmeal"))
 //фильтр на range будет актуален тут. т.к получив напирмер сегодняшине, можно получить и по калоирйности их не усложняя запросы, а просто включая фильтр.
@@ -53,7 +54,7 @@ public class UserMeal extends BaseEntity {
     public static final String BYCALRange = "UserMeal.getCaloriesByRange";
     public static final String All = "UserMeal.getAllMeals";
     public static final String USERSALLORDERED = "UserMeal.getAllUserMeals";
-    public static final String DELETE = "UserMeal.delete";
+    public static final String DELETE = "UserMeal.deleteUser";
 
 
 

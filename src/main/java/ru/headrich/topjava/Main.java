@@ -38,15 +38,15 @@ public class Main {
 
         User nu = new User();
         //um.setUser(nu);
-        //um.setUser(userDAO.get(40));
+        //um.setUser(userDAO.getUser(40));
         nu.setEmail("eeee");
 
         userMealRepository.addMeal(um,1);
 
-        //userDAO.save(nu);
+        //userDAO.addUser(nu);
 
-        //userDAO.get(1);
-        //System.out.println(userDAO.getAllUsers().get(0).getMeals());
+        //userDAO.getUser(1);
+        //System.out.println(userDAO.getAllUsers().getUser(0).getMeals());
 
 
     }

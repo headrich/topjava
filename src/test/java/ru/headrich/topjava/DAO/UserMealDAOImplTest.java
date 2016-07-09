@@ -22,7 +22,7 @@ public class UserMealDAOImplTest extends TestCase {
         cp.setProperty("username","root");
         cp.setProperty("password","root");
         cp.setProperty("driver","com.mysql.jdbc.Driver");
-        ConnectionManager cm =  ConnectionManager.getInstance(cp);
+        ConnectionManager cm =  ConnectionManagerFactory.getConnectionManager("DV");
         userMealDAO.setCm(cm);
         userDAO.setCm(cm);
 

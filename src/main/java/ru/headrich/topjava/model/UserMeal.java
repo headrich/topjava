@@ -4,7 +4,7 @@ import ru.headrich.topjava.DAO.ORMengine.annotations.Column;
 import ru.headrich.topjava.DAO.ORMengine.annotations.Table;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 

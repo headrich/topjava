@@ -5,6 +5,8 @@ import org.junit.Before;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.model.UserMeal;
+import ru.headrich.topjava.util.JDBCUtilities;
+import ru.headrich.topjava.util.JNDIStandAloneServer;
 
 import java.sql.Date;
 import java.time.Clock;
@@ -20,7 +22,12 @@ public class UserDAOImplTest extends TestCase {
 
     static UserDAO userDAO;
     static UserMealDAO userMealDAO;
+static {
 
+    JDBCUtilities.bindName();
+    userDAO = SimpleDAOFactory.getInstance().getUserDAO();
+    userMealDAO = SimpleDAOFactory.getInstance().getUserMealDAO();
+}
    /* static{
         Properties cp = new Properties();
         cp.setProperty("url","jdbc:mysql://localhost:3306/calories?allowMultiQueries=true");
@@ -34,6 +41,7 @@ public class UserDAOImplTest extends TestCase {
     @Before
     public void init() {
         //load config should be there
+        //che za huinya pochemu ne inititsya
         userDAO = SimpleDAOFactory.getInstance().getUserDAO();
         userMealDAO = SimpleDAOFactory.getInstance().getUserMealDAO();
     }

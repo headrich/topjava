@@ -3,11 +3,12 @@ package ru.headrich.topjava.model;
 import ru.headrich.topjava.DAO.ORMengine.annotations.Column;
 import ru.headrich.topjava.DAO.ORMengine.annotations.Table;
 
+import javax.annotation.PostConstruct;
 import java.beans.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.sql.Date;
+import java.util.Date;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -27,7 +28,7 @@ public class User extends NamedEntity implements Serializable {
     @Column(name = "password")
     private String password;
     @Column(name = "registered")
-    private Date registered = Date.valueOf(LocalDate.now());
+    private Date registered = new Date();
     @Column(name = "enabled")
     private boolean enabled =true;
 
@@ -52,7 +53,6 @@ public class User extends NamedEntity implements Serializable {
         super();
 
     }
-
     public User(String name) {
         super(name);
     }

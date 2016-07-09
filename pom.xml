@@ -149,6 +149,34 @@
         </dependency>
 
 
+
+
+        <!--jndi-->
+        <!-- https://mvnrepository.com/artifact/simple-jndi/simple-jndi -->
+        <dependency>
+            <groupId>simple-jndi</groupId>
+            <artifactId>simple-jndi</artifactId>
+            <version>0.11.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>4.1.6.RELEASE</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/jboss/jnp-client -->
+        <dependency>
+            <groupId>jboss</groupId>
+            <artifactId>jnp-client</artifactId>
+            <version>4.2.2.GA</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jboss.as.legacy.naming/jboss-as-legacy-naming-jnp -->
+        <dependency>
+            <groupId>org.jboss.as.legacy.naming</groupId>
+            <artifactId>jboss-as-legacy-naming-jnp</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+
+
     </dependencies>
 
     <profiles>

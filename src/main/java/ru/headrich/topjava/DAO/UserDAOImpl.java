@@ -11,6 +11,7 @@ import ru.headrich.topjava.model.UserMeal;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 /**
  * Created by Montana on 07.06.2016.
@@ -37,7 +38,9 @@ public  class UserDAOImpl implements UserDAO {
         } catch (IOException e) {
             System.out.println("Load config error;" + e.getMessage());
         }*/
-        cm = ConnectionManager.getInstance(cp);
+        //cm = ConnectionManager.getInstance(cp);
+        cm=ConnectionManagerFactory.getConnectionManager("DS"); // значит лучше будет если тут инъектится на основе конфига, датасурс или драйвер менеджер,
+        // типа один для се дргуой для ее, ну и для датасурса нужен контейнер, или биндить датасурс вручную
 
     }
 
@@ -52,7 +55,7 @@ public  class UserDAOImpl implements UserDAO {
     }
 
     //checking table-column names by schema
-    public static boolean validateTable() throws SQLException {
+    public static boolean validateTable() throws Exception {
         /*
         if field has collection type/ then it is other table/
             полученную карту орм можно сравнить с этой схемой.
@@ -77,7 +80,11 @@ public  class UserDAOImpl implements UserDAO {
     }
 
     public static void main(String[] args) throws SQLException {
-        validateTable();
+        try {
+            validateTable();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 //TODO тут и будет у нас храниться инфа о состоянии текущего соединения, сущностей, и т.д.
@@ -443,7 +450,7 @@ So, your DAOs are effectively stateless, and should be singleton-scoped (i.e. de
         um.setId(rs.getInt(7));
         um.setDescription(rs.getString(8));
         um.setCaloiries(rs.getInt(9));
-        um.setDate(rs.getDate(10));
+        um.setDate(new Date(rs.getDate(10).getTime()));
         return um;
     }
     //в 2 запроса
@@ -565,7 +572,7 @@ So, your DAOs are effectively stateless, and should be singleton-scoped (i.e. de
             ps.setString(2,user.getEmail());
             ps.setString(3,user.getPassword()); //java.util Base64 в помощь хэшированию
             ps.setBoolean(4,user.isEnabled());
-            ps.setDate(5,user.getRegistered());
+            ps.setDate(5,new java.sql.Date(user.getRegistered().getTime()));
 
 
             int mc = ps.executeUpdate();
@@ -680,7 +687,7 @@ So, your DAOs are effectively stateless, and should be singleton-scoped (i.e. de
                 updateUser.setString(2, user.getEmail());
                 updateUser.setString(3, user.getPassword());
                 updateUser.setBoolean(4, user.isEnabled());
-                updateUser.setDate(5, user.getRegistered());
+                updateUser.setDate(5, new java.sql.Date(user.getRegistered().getTime()));
                 updateUser.setInt(6, user.getId());
 
                 int mc = updateUser.executeUpdate();

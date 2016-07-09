@@ -24,7 +24,7 @@ public class ConnectionManagerTest{
         cp.setProperty("password","root");
         cp.setProperty("driver","com.mysql.jdbc.Driver");
 
-        assertNotNull(ConnectionManager.getInstance(cp));
+        assertNotNull(ConnectionManagerFactory.getConnectionManager("DV"));
     }
 
     @Test
@@ -35,7 +35,7 @@ public class ConnectionManagerTest{
         cp.setProperty("password","root");
         cp.setProperty("driver","com.mysql.jdbc.Driver");
 
-        ConnectionManager cm = ConnectionManager.getInstance(cp);
+        ConnectionManager cm = ConnectionManagerFactory.getConnectionManager("DV");
         assertNotNull(cm.getConnection());
 
     }

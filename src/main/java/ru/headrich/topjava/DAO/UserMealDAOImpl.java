@@ -25,7 +25,8 @@ public class UserMealDAOImpl implements UserMealDAO{
         cp.setProperty("username","root");
         cp.setProperty("password","root");
         cp.setProperty("driver","com.mysql.jdbc.Driver");
-        cm = ConnectionManager.getInstance(cp);
+        //cm = ConnectionManager.getInstance(cp);
+        cm=ConnectionManagerFactory.getConnectionManager("DV");
 
     }
 
@@ -119,7 +120,7 @@ public class UserMealDAOImpl implements UserMealDAO{
             ps = connection.prepareStatement("INSERT INTO meal VALUES (DEFAULT , ?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
             ps.setInt(2,userMeal.getCaloiries());
             ps.setString(1,userMeal.getDescription());
-            ps.setDate(3,userMeal.getDate());
+            ps.setDate(3,new java.sql.Date(userMeal.getDate().getTime()));
             ps.setInt(4,userMeal.getUser().getId());
             int mc = ps.executeUpdate();
             if(mc!=-1 && mc!=0){
@@ -157,7 +158,7 @@ public class UserMealDAOImpl implements UserMealDAO{
             ps= connection.prepareStatement("UPDATE meal SET ccal=?,descr=?,date=?,user=? WHERE idmeal=?");
             ps.setInt(1,userMeal.getCaloiries());
             ps.setString(2,userMeal.getDescription());
-            ps.setDate(3,userMeal.getDate());
+            ps.setDate(3,new java.sql.Date(userMeal.getDate().getTime()));
             ps.setInt(4,userMeal.getUser().getId());
             ps.setInt(5,userMeal.getId());
             int mc = ps.executeUpdate();
@@ -176,7 +177,6 @@ public class UserMealDAOImpl implements UserMealDAO{
                 cm.disconnect();
 
         }
-
     }
 
     public void SaveOrUpdateMeal(UserMeal meal){

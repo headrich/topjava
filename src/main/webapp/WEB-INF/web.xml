@@ -1,4 +1,4 @@
-
+<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
@@ -21,9 +21,11 @@
     </filter-mapping>
 
     <resource-ref>
+        <description>MySQL Datasource example</description>
         <res-ref-name>jdbc/topjava</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
     <!-- В общем соль в том что корень директория -webapp. В ней и лежит фалй сервлета index.
         Web-inf для метаинформации о веб -приложении, потому там файл web.xml. -->

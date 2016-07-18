@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -49,7 +50,7 @@ import java.util.Date;
 })
 
 
-public class UserMeal extends BaseEntity {
+public class UserMeal extends BaseEntity implements Serializable {
     public static final String BYROW = "UserMeal.getByRow";
     public static final String BYCALRange = "UserMeal.getCaloriesByRange";
     public static final String All = "UserMeal.getAllMeals";

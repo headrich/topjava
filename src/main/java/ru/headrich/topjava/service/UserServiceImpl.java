@@ -48,8 +48,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(User user) throws NotFoundException {
-        userRepository.addUser(user);
+    public boolean update(User user) throws NotFoundException {
+        // if is new -save ? else - update  on service method
+        return userRepository.updateUser(user);
     }
 
     @Override

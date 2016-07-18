@@ -1,6 +1,8 @@
 package ru.headrich.topjava.web.mvc.webflow;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.repository.JPA.UserRepositoryImpl;
@@ -23,9 +25,10 @@ import java.io.IOException;
 /**
  * Created by Montana on 04.07.2016.
  */
-@WebServlet(name = "UsersController" , urlPatterns = {"/users","/users/*"})
+@WebServlet(name = "UsersController" , urlPatterns = {"/users","/users/*","/profile","/profile/*"})
 public class UsersController extends HttpServlet {
-
+    Logger LOG = LoggerFactory.getLogger(UsersController.class);
+//todo DI!!!! and nothing more - and asynctask! in servlet
     UserService us = new UserServiceImpl(new UserRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory()));
 
     @Override
@@ -42,11 +45,49 @@ public class UsersController extends HttpServlet {
 
             session.setAttribute("userList",us.getAllUsers());
         }*/
+        String uri = req.getRequestURI();
+        String returnPage=req.getServletPath();
+        if(uri.equals("/top/users")) {
+            req.setAttribute("userlist", us.getAllUsers());
+           returnPage = "/WEB-INF/jsp/users.jsp";
+        }
+        if(uri.equals("/top/profile")){
+            returnPage = "/profile.jsp";
+        }
 
-        req.setAttribute("userlist",us.getAllUsers());
-        req.getRequestDispatcher("/WEB-INF/jsp/users.jsp").include(req,resp);
+        req.getRequestDispatcher(returnPage).include(req,resp);
 
         //super.doGet(req, resp);
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String uri = req.getRequestURI();
+        if(uri.equals("/top/profile/edit")){
+            doUpdateData(req,resp);
+
+        }
+    }
+
+    protected void doUpdateData(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        UserService us = new UserServiceImpl(new UserRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory()));
+
+        String username = req.getParameter("username");
+        String email = req.getParameter("email");
+        User u = (User) req.getSession().getAttribute("user");
+        u.setName(username);
+        u.setEmail(email);
+//ajax updating !!!
+        resp.setContentType("text/html; charset=utf-8;");
+        if(us.update(u)){
+            LOG.info("Update user done!");
+            resp.getWriter().append("Changes saved!");
+        }else {
+            resp.getWriter().append("Changes not saved! Email is used!");
+            LOG.info("Update user failed!");
+        }
+        resp.sendRedirect("/top/profile");
+
+
+    }
 }

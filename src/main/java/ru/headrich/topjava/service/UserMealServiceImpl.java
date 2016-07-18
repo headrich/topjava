@@ -29,7 +29,7 @@ public class UserMealServiceImpl implements UserMealService {
 
     @Override
     public List<UserMeal> getAllMeals() {
-        return null;
+        return userMealRepository.getAllMeals();
     }
 
     @Override

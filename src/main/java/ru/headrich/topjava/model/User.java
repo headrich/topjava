@@ -26,7 +26,7 @@ import static ru.headrich.topjava.model.User.ALL;
 //моя фича по обновлению только измененных полей - http://www.mkyong.com/hibernate/hibernate-dynamic-update-attribute-example/
 // , как реализована хз,либо через встраивание байткода либо через лругие прокси, либо хиберовские внутренние механизмы событий и слушателей ,
 // типа онфлушдерти и сверка значений полей.
-@DynamicUpdate //hiber api
+@DynamicUpdate //hiber api to upadte only modified columns
 @Table(name="user")
 @AttributeOverride(name = "id",column = @Column(name = "iduser"))
 @NamedNativeQuery(name = User.ByEmail,query = "SELECT * from user u where u.email=:email",resultClass = User.class,
@@ -37,7 +37,11 @@ import static ru.headrich.topjava.model.User.ALL;
         @NamedQuery(name=User.ALL,query = "select u from User u",hints = {@QueryHint(name = "javax.persistence.loadgraph",value="userRoleGraph")})
 })
 @NamedEntityGraph(name = "userRoleGraph", attributeNodes = @NamedAttributeNode("authorities"))
-@FetchProfile(name = "userMealsFP",fetchOverrides = @FetchProfile.FetchOverride(entity = User.class,association = "meals",mode = FetchMode.JOIN))
+@FetchProfiles({
+        @FetchProfile(name = "userMealsFP",fetchOverrides = @FetchProfile.FetchOverride(entity = User.class,association = "meals",mode = FetchMode.JOIN)),
+        @FetchProfile(name = "userRolesFP",fetchOverrides = @FetchProfile.FetchOverride(entity = User.class,association = "authorities",mode = FetchMode.JOIN))
+})
+
 
 //@NamedEntityGraph - именные графы https://docs.oracle.com/javaee/7/tutorial/persistence-entitygraphs002.htm#BABFIGEI
 //  пример с  подграфами и http://www.thoughts-on-java.org/jpa-21-entity-graph-part-2-define/
@@ -90,9 +94,9 @@ public class User extends NamedEntity {
     @Enumerated*/
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "authority")
-    @Cascade({org.hibernate.annotations.CascadeType.PERSIST, org.hibernate.annotations.CascadeType.DELETE})
-    @Basic(fetch = FetchType.LAZY)
-    @ElementCollection(targetClass = Role.class,fetch = FetchType.LAZY)
+    @Cascade({org.hibernate.annotations.CascadeType.ALL})
+    //@Basic(fetch = FetchType.LAZY)
+    @ElementCollection(targetClass = Role.class,fetch = FetchType.EAGER)
     @CollectionTable(name="authority",joinColumns = @JoinColumn(name = "user"))
     private Set<Role> authorities;
 
@@ -105,7 +109,7 @@ public class User extends NamedEntity {
             @Filter(name = "mealsDateFilter", condition="date >= :mealsDateFilterParam"),
 
     })
-    private List<UserMeal> meals;
+    private List<UserMeal> meals = new ArrayList<>();
 
 
     @Transient

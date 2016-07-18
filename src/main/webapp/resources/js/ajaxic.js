@@ -23,3 +23,17 @@ function updateTable(){
 function updateTableData() {
     //$(".table")
 }
+
+function applyFilter( pick){
+
+
+
+}
+
+
+var TableApi = new Class({
+        clear: function(){
+            
+        }
+
+});

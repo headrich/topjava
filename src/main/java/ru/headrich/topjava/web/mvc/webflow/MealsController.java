@@ -1,5 +1,6 @@
 package ru.headrich.topjava.web.mvc.webflow;
 
+import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.repository.JPA.UserMealRepositoryImpl;
 import ru.headrich.topjava.service.UserMealService;
@@ -29,8 +30,11 @@ public class MealsController extends HttpServlet {
             }
         }
 
-
-        req.setAttribute("meals",((User)req.getSession().getAttribute("user")).getMeals());
+        if(req.getSession().getAttribute("user")==null){
+            User guest = new User("Guest","","", Role.ROLE_GUEST);
+            req.getSession().setAttribute("user",guest);
+        }
+        req.setAttribute("meals",ums.getAllMeals());
 
         req.getRequestDispatcher("/meals.jsp").include(req,resp);
         System.out.println("after include rdispatcher");

@@ -32,15 +32,25 @@
             <a class="navbar-brand" href="#">Brand</a>
         </div>
         <div class="col-md-1"><p class="navbar-text">Welcome ${sessionScope['user'].name}</p></div>
-        <form class="navbar-form navbar-left" role="search">
+        <form class="navbar-form navbar-right" >
             <%
                 User u =(User) session.getAttribute("user");
                 if(u.getAuthorities().contains(Role.ROLE_ADMIN))
                 {%>
             <a class="btn btn-default" href="users" role="button">users</a>
             <% } %>
+            <%
+                if(u.getAuthorities().contains(Role.ROLE_USER) || u.getAuthorities().contains(Role.ROLE_ADMIN) )
+                {%>
             <a class="btn btn-default" href="profile" role="button">${sessionScope['user'].name}</a>
             <a class="btn btn-default" href="logout" role="button">logout</a>
+            <% }
+            if(u==null || u.getAuthorities().contains(Role.ROLE_GUEST))
+            {%>
+            <a class="btn btn-default" href="login" role="button">Sign In</a>
+            <a class="btn btn-default" href="login/reg" role="button">Registrate!</a>
+            <% } %>
+
         </form>
 
     </div>
@@ -48,13 +58,37 @@
 <div class="jumbotron">
     <div class="container">
         <p> There are list of meals</p>
+        <div class="btn-group">
+            <p> Filter </p>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                AllMeals <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" class="editRow">AllMeals</a></li>
+                <%if(u!=null && !u.getAuthorities().contains(Role.ROLE_GUEST))
+                //((User) req.getSession().getAttribute("user")).getMeals();
+                {%>
+                <li><a href="#" class="removeRow">MyMeals</a></li>
+                <% }%>
+
+            </ul>
+        </div>
         <table class="table">
+            <tr>
+                <td><b>Date</b></td>
+                <td><b>Description</b></td>
+                <td><b>Calories</b></td>
+                <td></td>
+            </tr>
             <c:forEach items="${requestScope['meals']}" var="m">
+
                 <tr>
                     <td>${m['date']}</td>
                     <td>${m['description']}</td>
                     <td>${m['calories']}</td>
-                    <td><!-- Single button -->
+                    <%if(u!=null && !u.getAuthorities().contains(Role.ROLE_GUEST))
+                    {%>
+                    <td><!-- Single button  -->
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 edit <span class="caret"></span>
@@ -66,6 +100,7 @@
                             </ul>
                         </div>
                     </td>
+                    <% } %>
                 </tr>
             </c:forEach>
         </table>

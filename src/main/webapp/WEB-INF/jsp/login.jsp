@@ -8,7 +8,7 @@
 
 <body>
 <div style="width: 890px">
-<form class="form-horizontal" method="post" action="login">
+<form class="form-horizontal" method="post" action="/top/login">
     <div class="form-group">
         <label for="InputName" class="col-sm-2 control-label">Name</label>
         <div class="col-sm-10">
@@ -40,10 +40,10 @@
 <script type="text/javascript">
     var sendPostRequest = function(){
         var ajax = new XMLHttpRequest();
-        ajax.open("POST","/logitn",true);
+        ajax.open("POST","/fffrfr",true);
         ajax.send();
-    }
-    button.addEventListener("onSubmit",sendPostRequest)
+    };
+    //document.getElementsByTagName("button")[0].addEventListener("click",sendPostRequest);
 </script>
 
 </body>

@@ -8,9 +8,13 @@
         <%
         //response.sendRedirect("login");
         %>
-        Hello Home!
+        Hello on my service!
         Wanna login?
-        <a class="btn btn-default" href="login" role="button">Link</a>
+        <a class="btn btn-default" href="login" role="button">Sign in</a>
+        Wanna Registrate?
+        <a class="btn btn-default" href="login/reg" role="button">Registrate</a>
+        Watch Meals?
+        <a class="btn btn-default" href="meals" role="button">Meals</a>
     </h2>
     </body>
 </html>

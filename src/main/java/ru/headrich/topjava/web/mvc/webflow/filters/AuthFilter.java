@@ -19,10 +19,10 @@ import java.util.regex.Pattern;
 /**
  * Created by Montana on 05.07.2016.
  */
-@WebFilter(filterName = "AuthFilter", servletNames = {"MealsController","UsersController"}, urlPatterns = {"/*"})
+@WebFilter(filterName = "AuthFilter", servletNames = {"MealsController","UsersController"}, urlPatterns = {"/users/*","/profile/*"})
 public class AuthFilter implements Filter {
-    private static final String[] ignoreCases = {"/logout","/login","registration","/logout/*","/login/*","/index.jsp","/top","/"};
-    static final Pattern uriPattern =   Pattern.compile("^\\/?(login|registration|logout|index)?/?$");
+    private static final String[] ignoreCases = {"/logout","/login","/registration","/registrate","/registrate","/logout/*","/login/*","/index.jsp","/top","/","/meals"};
+    static final Pattern uriPattern =   Pattern.compile("^/[0-9A-Za-z_]*(/(login|registrate|logout|index|meals|))((\\/([0-9A-Za-z_]*)?)?|(\\?([\\w-]+(=[\\w-]*)?(&[\\w-]+(=[\\w-]*)?)*)?))$");
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -39,7 +39,7 @@ public class AuthFilter implements Filter {
 
         HttpSession s = req.getSession(false);
         System.out.println(" AuthFilter req: servlet: " + req.getServletPath() + "   url: " + req.getRequestURL() + "    cut url: "+ req.getRequestURL().replace(0,req.getRequestURL().lastIndexOf("/"),""));
-        Matcher urlMatcher = uriPattern.matcher(req.getRequestURL().replace(0,req.getRequestURL().lastIndexOf("/"),""));
+        Matcher urlMatcher = uriPattern.matcher(req.getRequestURI());
         if( urlMatcher.matches()){
             filterChain.doFilter(servletRequest, servletResponse);
             System.out.println("after AuthFilter Call doFilter");
@@ -72,7 +72,7 @@ public class AuthFilter implements Filter {
                 User u = (User) s.getAttribute("user");
                 if(!u.getAuthorities().contains(Role.ROLE_ADMIN) && req.getServletPath().equals("/users")){
                     System.out.print(req.getServletPath() + u.getAuthorities());
-                      res.sendRedirect("meals");
+                      res.sendRedirect("/top/meals");
 
                         System.out.println("after AuthFilter Call doFilter and sendredirect to meals not admin");
                     return;

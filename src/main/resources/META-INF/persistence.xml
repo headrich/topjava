@@ -1,10 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE persistence [
+        <!ELEMENT persistence (persistence-unit)*>
+        <!ATTLIST persistence
+                xmlns CDATA #REQUIRED
+                xmlns:xsi CDATA #REQUIRED
+                xsi:schemaLocation CDATA #REQUIRED
+                version CDATA #REQUIRED>
+        <!ELEMENT persistence-unit (provider|jta-data-source)*>
+        <!ATTLIST persistence-unit
+                name CDATA #REQUIRED
+                transaction-type CDATA #REQUIRED>
+        <!ELEMENT provider (#PCDATA)>
+        <!ELEMENT jta-data-source (#PCDATA)>
+        ]>
 <persistence
         xmlns="http://java.sun.com/xml/ns/persistence"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
         version="2.0">
     <!--JAva EE JTA transactions Data source COnfig WITH JNDI RESOURCE DATA SOURCE-->
+    <persistence-unit name="topjava" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <non-jta-data-source>java:comp/env/jdbc/topjava</non-jta-data-source>
+
+       <!-- Для того чтобы использовать JTA - (для управления транзакция между разными ресурсами)
+        - нужно использовать полноценный сервер типa (Atomikos, JOTM, Bitronix, SimpleJTA, JBossTS or GeronimoTM/Jencks.)
+        Tomcat, Jetty реализует для standalone приложений транзакции , потому ресурс локал тут.
+-->
+
+    </persistence-unit>
 
 
 
@@ -20,7 +44,7 @@
 
 
     <!--RESOURCE LOCAL CONFIG/ with simple local transactions-->
-   <!-- <persistence-unit name="topjava" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="topjavaRL" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <properties>
@@ -30,6 +54,22 @@
             <property name="javax.persistence.jdbc.password" value="root"/>
         </properties>
 
-    </persistence-unit>-->
+
+
+    </persistence-unit>
+
+
+    <!--in props
+    http://stackoverflow.com/questions/2552612/how-to-use-jta-support-in-tomcat-6-for-hibernate
+    http://stackoverflow.com/questions/3753815/how-to-define-an-non-jta-datasource-for-jpa-hibernate-org-hibernate-connection
+    current_session_context_class=thread  //фильтры для открытия закрытия сессии/entityManager  нужно сделать
+    <property name= "cache.provider_class">
+		org.hibernate.cache.NoCacheProvider
+		<property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+
+hibernate.c3p0.minPoolSize=5
+hibernate.c3p0.maxPoolSize=20
+hibernate.c3p0.timeout=1800
+hibernate.c3p0.max_statement=50-->
 
 </persistence>

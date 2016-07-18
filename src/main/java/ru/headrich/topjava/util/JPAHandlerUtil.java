@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+
 /**
  * Created by Montana on 30.06.2016.
  */
@@ -20,20 +21,21 @@ public class JPAHandlerUtil {
             if(emf==null){
                 synchronized (JPAHandlerUtil.class) {
                     if(emf==null)
-                    emf = Persistence.createEntityManagerFactory("topjava");
+                    emf = Persistence.createEntityManagerFactory("topjavaRL");
 
                 }
             }
       return emf;
   }
 
+
     public static SessionFactory buildSessionFactory(){
         //in hiber docs says that sessionfactory can be singleton? and может чето многопоточить. в отличии от сессии.
         if(sessionFactory==null){
             synchronized (JPAHandlerUtil.class){
                 if(sessionFactory==null){
-                    sessionFactory= new Configuration().configure().buildSessionFactory();
-
+                    //sessionFactory= new Configuration().configure().buildSessionFactory();
+                    sessionFactory = buildEntityManagerFactory().unwrap(SessionFactory.class);
                 }
             }
         }

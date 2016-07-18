@@ -17,7 +17,7 @@
         </encoder>
     </appender>
 
-    <logger name="ru.headrich.topjava" level="debug">
+    <logger name="ru.headrich.topjava" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
     <root level="info" >

@@ -1,25 +1,28 @@
 package ru.headrich.topjava.repository.JPA;
 
-import org.hibernate.Criteria;
-import org.hibernate.Filter;
-import org.hibernate.Session;
+import org.hibernate.*;
 
-import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.model.UserMeal;
 import ru.headrich.topjava.repository.UserRepository;
 import ru.headrich.topjava.util.JPAHandlerUtil;
+import ru.headrich.topjava.util.exception.NotFoundException;
 
 import javax.jws.soap.SOAPBinding;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.sql.Connection;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Created by Montana on 30.06.2016.
  */
 public class UserRepositoryImpl implements UserRepository {
+
+    private static Logger LOG = LoggerFactory.getLogger(UserRepositoryImpl.class);
     EntityManagerFactory emf;
     Connection currentConnection;
     Session s;
@@ -90,6 +93,7 @@ public class UserRepositoryImpl implements UserRepository {
             queryHints.put("javax.persistence.loadgraph",em.createEntityGraph("userRoleGraph"));
 
             Session s = em.unwrap(Session.class);
+
             s.enableFetchProfile("userMealsFP"); //альтернатива графам в хибернейте
 
             u=em.find(User.class,id,queryHints);
@@ -101,7 +105,8 @@ public class UserRepositoryImpl implements UserRepository {
 
         }catch (Exception e ){
             //log
-            System.err.println(e.getMessage());
+
+            System.err.println(e.getMessage() + "\n" + e.getStackTrace());
         }
         finally {
 
@@ -113,23 +118,37 @@ public class UserRepositoryImpl implements UserRepository {
     //hiberstyle
     public boolean updateUser(User user) {
         boolean updated=false;
-        Session s = emf.createEntityManager().unwrap(Session.class);
-        //Session s1 = JPAHandlerUtil.buildSessionFactory().getCurrentSession();
+        //Session s = emf.createEntityManager().unwrap(Session.class);
+        //Illegal attempt to associate a collection with two open sessions. Collection : [ru.headrich.topjava.model.User.authorities#46]
+        //todo у меня ождна сессия - которая загрузила авторити для пользователя, другая пытается их обновить. такие дела. как решать?
+        Session s=null;
+        try{
+            s=JPAHandlerUtil.buildSessionFactory().getCurrentSession();
+            LOG.info("updateUser: Get Current session "  + s );
+        }catch (HibernateException e){
+            LOG.info("updateUser: Open new session "  + s );
+            s= JPAHandlerUtil.buildSessionFactory().openSession();
+        }
+        //s.merge(user);
+
         //todo is this session equals session retrived by unwraping em??
-        System.out.println("sessions emf vs sf   s equals s1  : " +s.equals(JPAHandlerUtil.buildSessionFactory().getCurrentSession()));
-        Transaction transaction = s.beginTransaction();
+        //System.out.println("sessions emf vs sf   s equals s1  : " +s.equals(JPAHandlerUtil.buildSessionFactory().getCurrentSession()));
+        Transaction transaction = s.getTransaction();
         try{
             transaction.begin();
+
             s.update(user);
             transaction.commit();
             updated=true;
         }catch (Exception e ){
             transaction.rollback();
             updated =false;
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage() + "\n"  );
+            Stream.of(e.getStackTrace()).forEach(System.out::println);
         }finally {
             //todo if session close then try-wuthresourceblock else disconnect ??
-            Connection connection = s.disconnect();
+           // Connection connection = s.disconnect();
+            //java.lang.IllegalStateException: Session/EntityManager is closed
 
         }
 
@@ -169,17 +188,42 @@ public class UserRepositoryImpl implements UserRepository {
         EntityManager em = JPAHandlerUtil.getWorkingEntityManager();
 
         List<User> users = null;
-
+        Transaction transaction=null;
         try {
             Session s = em.unwrap(Session.class);
 
+            //Session s=null;
 
-            users = em.createNamedQuery(User.ByEmail,User.class).setParameter("email",email).getResultList();
+            //может быть так что запрос мы можем постоянно обрабатывать forward и include/ и сессия будет оставаться в раммках этого запроса.
+            //но лучше сделать сессию в рамках хттп сессии.
+            try{
+                s=JPAHandlerUtil.buildSessionFactory().getCurrentSession();
+                LOG.info("getUserByEmail: Get Current session "  + s );
+            }catch (HibernateException e){
+                LOG.info("getUserByEmail: Open new session "  + s );
+                s= JPAHandlerUtil.buildSessionFactory().openSession();
+            }
+            try{
+                transaction = s.getTransaction();
+                LOG.info("getUserByEmail: Get current transaction "  + transaction );
+                transaction.begin();
+            }catch (Exception e){
+                transaction= s.beginTransaction();
+                LOG.info("getUserByEmail: Begin new transaction "  + transaction );
+            }
+            users = s.createNamedQuery(User.ByEmail,User.class).setParameter("email",email).getResultList();
+            transaction.commit();
+
         }catch (Exception e ){
             //log
+            transaction.rollback();
             System.out.println(e.getMessage());
+
         }
-        return users.stream().findFirst().orElse(null);
+
+        User u = users.stream().findFirst().orElse(null);
+      //  if(u==null) throw new NotFoundException("User with email "+ email + " not found");
+        return u;
     }
 
     @Override
@@ -187,14 +231,37 @@ public class UserRepositoryImpl implements UserRepository {
         EntityManager em = JPAHandlerUtil.getWorkingEntityManager();
 
         List<User> users = null;
-
+        Transaction t = null;
         try {
             Session s = em.unwrap(Session.class);
+            try{
+                s=JPAHandlerUtil.buildSessionFactory().getCurrentSession();
+                LOG.info("getUserByName: Get Current session "  + s );
+            }catch (HibernateException e){
+                LOG.info("getUserByName: Open new session "  + s );
+                s= JPAHandlerUtil.buildSessionFactory().openSession();
+            }
 
+            try{
+                t = s.getTransaction();
+                LOG.info("getUserByName: Get current transaction "  + t );
+                t.begin();
+            }catch (Exception e){
+                t= s.beginTransaction();
+                LOG.info("getUserByName: Begin new transaction "  + t );
+            }
 
-            users = em.createNamedQuery(User.ByName,User.class).setParameter("name",name).getResultList();
+            //users = em.createNamedQuery(User.ByName,User.class).setParameter("name",name).getResultList(); //нет LazyInitiException for authorities(fetchtype = lazy)
+            s.enableFetchProfile("userRolesFP"); //альтернатива графам в хибернейте
+
+            users = s.createNamedQuery(User.ByName,User.class).setParameter("name",name).getResultList(); //выбрасывается lazyinitexcept
+            if(s.isFetchProfileEnabled("userRolesFP")) s.disableFetchProfile("userRolesFP");
+
+            t.commit();
         }catch (Exception e ){
+            t.rollback();
             //log
+
             System.out.println(e.getMessage());
         }
         return users.stream().findFirst().orElse(null);

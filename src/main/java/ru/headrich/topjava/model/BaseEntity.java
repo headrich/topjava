@@ -31,10 +31,12 @@ public class BaseEntity {
     public BaseEntity() {
     }
 
+
     @Transient
     public boolean isNew(){
         return(this.id ==null);
     }
+
 
     protected Date lastUpdateDate = new Date();
 

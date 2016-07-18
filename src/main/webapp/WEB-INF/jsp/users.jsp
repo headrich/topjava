@@ -37,11 +37,11 @@
             <a class="navbar-brand" href="#">Brand</a>
         </div>
         <div class="col-md-1"><p class="navbar-text">Welcome ${sessionScope['user'].name}</p></div>
-        <form class="navbar-form navbar-left" role="search">
+        <form class="navbar-form navbar-right" >
             <a class="btn btn-default" href="meals" role="button">meals</a>
             <a class="btn btn-default" href="profile" role="button">${sessionScope['user'].name}</a>
         </form>
-        <form action="logout" method="post">
+        <form class="navbar-form navbar-right" action="logout" method="post">
             <button type="submit" class="btn btn-default">logout</button></form>
 
     </div>

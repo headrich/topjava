@@ -19,7 +19,7 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    void update(User user)throws NotFoundException;
+    boolean update(User user)throws NotFoundException;
 
     User getByName(String username);
 

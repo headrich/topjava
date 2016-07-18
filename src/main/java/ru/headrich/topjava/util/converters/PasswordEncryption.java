@@ -135,6 +135,7 @@ public class PasswordEncryption {
             return zero == 0;
         }
 
+
         private  byte[] pbkdf2(char[] password, byte[] salt, int iterations)
         {
             KeySpec spec = new PBEKeySpec(password, salt, iterations, SIZE);

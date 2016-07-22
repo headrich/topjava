@@ -3,6 +3,10 @@ package ru.headrich.topjava.web.mvc.webflow;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.headrich.topjava.ResBean;
+import ru.headrich.topjava.TestDependResourceBean;
+import ru.headrich.topjava.TestResourceBean;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.repository.JPA.UserRepositoryImpl;
@@ -10,9 +14,11 @@ import ru.headrich.topjava.repository.UserRepository;
 import ru.headrich.topjava.service.UserService;
 import ru.headrich.topjava.service.UserServiceImpl;
 import ru.headrich.topjava.util.JPAHandlerUtil;
+import ru.headrich.topjava.util.annotations.Logging;
 import ru.headrich.topjava.util.converters.PasswordEncryption;
 import ru.headrich.topjava.util.exception.NotFoundException;
 
+import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -28,17 +34,25 @@ import java.util.Arrays;
  */
 @WebServlet(urlPatterns = {"/login","/logout","/logout/*","/login/*"})
 public class LoginController extends HttpServlet {
-
-    Logger LOG = LoggerFactory.getLogger(LoginController.class);
+    @Logging
+    Logger LOG;
+    //= LoggerFactory.getLogger(LoginController.class);
     //// TODO: 04.07.2016 macking with DI and IOC
     //there should not be repository. Service shoulde be there! Buisness logic! on web flow
     //UserRepository userRepository=new UserRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory());
-    UserService userService = new UserServiceImpl(new UserRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory()));
-
+    //@Resource(name="userService")
+    @Autowired
+    UserService userService;
+    //= new UserServiceImpl(new UserRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory())); //это не di
+    //JNDI не может связать один ресурс с другим, по крайней мере томкат не может этого сделать. Можно доставать лукапом только если
+    // с типизацией все впорядке.
+    @Resource(name="testResourceBean")
+    TestResourceBean trb;
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOG.info(trb.getFullyName());
         LOG.info(req.getServletPath());
         LOG.info(req.getRequestURI());
         String returnPage = req.getServletPath();

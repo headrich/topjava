@@ -4,6 +4,8 @@ import org.hibernate.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.model.UserMeal;
 import ru.headrich.topjava.repository.UserRepository;
@@ -20,16 +22,45 @@ import java.util.stream.Stream;
 /**
  * Created by Montana on 30.06.2016.
  */
+
+@Repository
 public class UserRepositoryImpl implements UserRepository {
 
     private static Logger LOG = LoggerFactory.getLogger(UserRepositoryImpl.class);
+    @PersistenceUnit(name = "topjava")
     EntityManagerFactory emf;
-    Connection currentConnection;
-    Session s;
+    //= JPAHandlerUtil.buildEntityManagerFactory();
+    Connection currentConnection=null;
+
+    Session s=null;
+
+    public EntityManagerFactory getEmf() {
+        return emf;
+    }
+
+    public void setEmf(EntityManagerFactory emf) {
+        this.emf = emf;
+    }
+
+    public Connection getCurrentConnection() {
+        return currentConnection;
+    }
+
+    public void setCurrentConnection(Connection currentConnection) {
+        this.currentConnection = currentConnection;
+    }
+
+    public Session getS() {
+        return s;
+    }
+
+    public void setS(Session s) {
+        this.s = s;
+    }
 
     public UserRepositoryImpl() {
         //так мы породим лишние зависимости
-        //emf = JPAHandlerUtil.buildEntityManagerFactory();
+        emf = JPAHandlerUtil.buildEntityManagerFactory();
     }
 
     public UserRepositoryImpl(EntityManagerFactory emf) {

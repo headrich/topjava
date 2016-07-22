@@ -12,6 +12,23 @@
 
     />
 
+    <Resource name = "userRepository" type = "ru.headrich.topjava.repository.JPA.UserRepositoryImpl"
+              auth="Container" factory="org.apache.naming.factory.BeanFactory"
+              singleton="true" ></Resource>
+
+    <Resource name = "userService" type = "ru.headrich.topjava.service.UserServiceImpl"
+              auth="Container" factory="org.apache.naming.factory.BeanFactory"
+              singleton="true" ></Resource>
+
+    <Resource name="testResourceBean" type="ru.headrich.topjava.TestResourceBean"
+              auth="Container" factory="org.apache.naming.factory.BeanFactory"
+
+    ></Resource>
+    <Resource name="testDependResourceBean" type="ru.headrich.topjava.TestDependResourceBean"
+              auth="Container" factory="org.apache.naming.factory.BeanFactory"
+              lastname="Petrov"
+
+    ></Resource>
 </Context>
 <!--
 регаем ресурс для jndi каталога-->

@@ -4,22 +4,29 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.NamedQuery;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Repository;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.model.UserMeal;
 import ru.headrich.topjava.repository.UserMealRepository;
 import ru.headrich.topjava.util.JPAHandlerUtil;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceUnit;
 import java.sql.Connection;
 import java.util.*;
 
 /**
  * Created by Montana on 30.06.2016.
  */
+@Repository
 public class UserMealRepositoryImpl implements UserMealRepository {
+
+    @Inject
     EntityManagerFactory emf;
     Session s;
     Connection currentConnection;

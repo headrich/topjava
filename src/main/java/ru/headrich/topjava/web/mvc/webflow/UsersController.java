@@ -3,6 +3,7 @@ package ru.headrich.topjava.web.mvc.webflow;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.repository.JPA.UserRepositoryImpl;
@@ -29,7 +30,9 @@ import java.io.IOException;
 public class UsersController extends HttpServlet {
     Logger LOG = LoggerFactory.getLogger(UsersController.class);
 //todo DI!!!! and nothing more - and asynctask! in servlet
-    UserService us = new UserServiceImpl(new UserRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory()));
+    @Autowired
+    UserService us;
+    //= new UserServiceImpl(new UserRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory()));
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

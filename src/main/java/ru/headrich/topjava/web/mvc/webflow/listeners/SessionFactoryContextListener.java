@@ -6,6 +6,8 @@ package ru.headrich.topjava.web.mvc.webflow.listeners;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.headrich.topjava.util.JPAHandlerUtil;
 
 import javax.persistence.EntityManagerFactory;
@@ -24,6 +26,10 @@ Logger LOG = LoggerFactory.getLogger(SessionFactoryContextListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
+        LOG.info("try to initate spring context");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
+
+
         LOG.info("Creating EntityManagerFactory");
         EntityManagerFactory entityManagerFactory = JPAHandlerUtil.buildEntityManagerFactory();
         servletContextEvent.getServletContext().setAttribute("emFactory",entityManagerFactory);

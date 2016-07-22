@@ -1,18 +1,30 @@
 package ru.headrich.topjava.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.repository.UserRepository;
 import ru.headrich.topjava.util.converters.PasswordEncryption;
 import ru.headrich.topjava.util.exception.NotFoundException;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
  * Created by Montana on 07.06.2016.
  */
+
+@Service
 public class UserServiceImpl implements UserService {
 
+    //@Resource(name = "userRepository") //это di, а так же сеттер, конструктор, или получение контроллера фабричным методом.
+
+    @Autowired
     private UserRepository userRepository;
+
+    public UserServiceImpl() {
+    }
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -20,6 +32,10 @@ public class UserServiceImpl implements UserService {
 
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public UserRepository getUserRepository() {
+        return userRepository;
     }
 
     @Override

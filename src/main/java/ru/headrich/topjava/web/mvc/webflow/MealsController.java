@@ -1,5 +1,6 @@
 package ru.headrich.topjava.web.mvc.webflow;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.repository.JPA.UserMealRepositoryImpl;
@@ -21,7 +22,9 @@ import java.io.IOException;
  */
 @WebServlet(name = "MealsController", urlPatterns = {"/meals","/meals/*"})
 public class MealsController extends HttpServlet {
-    UserMealService ums = new UserMealServiceImpl(new UserMealRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory()));
+    @Autowired
+    UserMealService ums;
+    //= new UserMealServiceImpl(new UserMealRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory()));
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(!req.getDispatcherType().equals(DispatcherType.REQUEST)){

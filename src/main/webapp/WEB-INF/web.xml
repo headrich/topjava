@@ -6,6 +6,13 @@
          version="3.1">
 
     <display-name>TOPJAVA</display-name>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/beans.xml</param-value>
+    </context-param>
+    <!--<listener>
+        <listener-class>org.springframework.</listener-class>
+    </listener>-->
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
@@ -27,6 +34,41 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
+
+    <resource-ref>
+        <description>repository</description>
+        <res-ref-name>userRepository</res-ref-name>
+        <res-type>ru.headrich.topjava.repository.JPA.UserRepositoryImpl</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+    </resource-ref>
+    <resource-ref>
+        <description>service</description>
+        <res-ref-name>userService</res-ref-name>
+        <res-type>ru.headrich.topjava.service.UserServiceImpl</res-type>
+        <res-auth>Container</res-auth>
+<!--<injection-target>
+    <injection-target-class></injection-target-class>
+    <injection-target-name>Tomcat dont support this EE DI feature</injection-target-name>
+</injection-target>-->
+        <res-sharing-scope>Shareable</res-sharing-scope>
+    </resource-ref>
+    <resource-ref>
+        <description>testik</description>
+        <res-ref-name>testResourceBean</res-ref-name>
+        <res-type>ru.headrich.topjava.TestResourceBean</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+    </resource-ref>
+    <resource-ref>
+        <description>testikSubResource</description>
+        <res-ref-name>testDependResourceBean</res-ref-name>
+        <res-type>ru.headrich.topjava.TestDependResourceBean</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+    </resource-ref>
+
+
     <!-- В общем соль в том что корень директория -webapp. В ней и лежит фалй сервлета index.
         Web-inf для метаинформации о веб -приложении, потому там файл web.xml. -->
     <!--<servlet>

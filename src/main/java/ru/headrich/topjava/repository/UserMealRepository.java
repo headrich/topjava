@@ -1,5 +1,6 @@
 package ru.headrich.topjava.repository;
 
+import org.springframework.stereotype.Repository;
 import ru.headrich.topjava.model.UserMeal;
 
 import java.util.Collection;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Created by Montana on 07.06.2016.
  */
+
 public interface UserMealRepository {
     UserMeal addMeal(UserMeal userMeal,int iduser);
 

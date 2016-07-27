@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <bean name="testBean" class="ru.headrich.topjava.TestResourceBean" p:tdrb-ref="testSubBean" p:name="NAME_MAINBEANSPRING"/>
+
+    <bean  name="testSubBean" class="ru.headrich.topjava.TestDependResourceBean" p:lastname="LASTNAME_UKULELEBEANSPRING"/>
+<context:component-scan base-package="ru.headrich.topjava.web"/>
+    <context:annotation-config/>
+    </beans>

@@ -1,5 +1,6 @@
 package ru.headrich.topjava.repository;
 
+import org.springframework.stereotype.Repository;
 import ru.headrich.topjava.model.User;
 
 import java.util.List;

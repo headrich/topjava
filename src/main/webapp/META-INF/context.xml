@@ -20,7 +20,7 @@
               auth="Container" factory="org.apache.naming.factory.BeanFactory"
               singleton="true" ></Resource>
 
-    <Resource name="testResourceBean" type="ru.headrich.topjava.TestResourceBean"
+    <!--<Resource name="testResourceBean" type="ru.headrich.topjava.TestResourceBean"
               auth="Container" factory="org.apache.naming.factory.BeanFactory"
 
     ></Resource>
@@ -28,7 +28,7 @@
               auth="Container" factory="org.apache.naming.factory.BeanFactory"
               lastname="Petrov"
 
-    ></Resource>
+    ></Resource>-->
 </Context>
 <!--
 регаем ресурс для jndi каталога-->

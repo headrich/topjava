@@ -1,15 +1,24 @@
 package ru.headrich.topjava;
 
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import javax.annotation.Resource;
+import javax.inject.Named;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import static com.sun.xml.internal.ws.policy.sourcemodel.wspolicy.XmlToken.Name;
 
 /**
  * Created by Montana on 19.07.2016.
  */
+@Component("testResourceBean")
 public class TestResourceBean  {
     String name="fadak";
-    @Resource(name = "testDependResourceBean")
+    //@Resource(name = "testDependResourceBean") //resource для jndi ресурсов типа datasource,
+    @Autowired
     TestDependResourceBean tdrb;
             //= new TestDependResourceBean("Petrov");
 
@@ -32,14 +41,14 @@ public class TestResourceBean  {
 
     public String getFullyName(){
 
-            try {
+         /*   try {
                 InitialContext ctx = new InitialContext();
                  tdrb = (TestDependResourceBean) ctx.lookup("java:comp/env/testDependResourceBean");
                 tdrb.setLastname("Ivanov");
 
             } catch (NamingException e) {
                 e.printStackTrace();
-            }
+            }*/
 
         return name+ tdrb.getLastname();
     }

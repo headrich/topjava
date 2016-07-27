@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 public class UserRepositoryImpl implements UserRepository {
 
     private static Logger LOG = LoggerFactory.getLogger(UserRepositoryImpl.class);
-    @PersistenceUnit(name = "topjava")
+    @PersistenceUnit(unitName = "topjava")
     EntityManagerFactory emf;
     //= JPAHandlerUtil.buildEntityManagerFactory();
     Connection currentConnection=null;

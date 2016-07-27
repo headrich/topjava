@@ -7,7 +7,11 @@ package ru.headrich.topjava.web.mvc.webflow.listeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import ru.headrich.topjava.TestResourceBean;
 import ru.headrich.topjava.util.JPAHandlerUtil;
 
 import javax.persistence.EntityManagerFactory;
@@ -19,15 +23,21 @@ import javax.servlet.annotation.WebListener;
  * creating instance of SessioNFactory  when context initiating
  */
 @WebListener
-public class SessionFactoryContextListener implements ServletContextListener{
-Logger LOG = LoggerFactory.getLogger(SessionFactoryContextListener.class);
+public class SpecialContextListener implements ServletContextListener{
+Logger LOG = LoggerFactory.getLogger(SpecialContextListener.class);
     //hibernate.current_session_context_class=thread реализует threadlocal session pattern в котором на каждый поток порождается своя сессия, и дает гарантию?
     // что каждый поток оплучит свой экземпляр сессии
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        LOG.info("try to initate spring context");
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
+        //LOG.info("try to initate spring context");
+        //получаем root context полученный с помощью ContextLoaderListener
+        //WebApplicationContext wctx = WebApplicationContextUtils.getWebApplicationContext(servletContextEvent.getServletContext());
+        //TestResourceBean testResourceBean = (TestResourceBean) wctx.getBean("testBean");//?? что же выведет?
+        //LOG.info(wctx.getDisplayName());
+        //servletContextEvent.getServletContext()
+        //new ClassPathXmlApplicationContext("beans.xml");
+
 
 
         LOG.info("Creating EntityManagerFactory");

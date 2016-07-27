@@ -6,13 +6,56 @@
          version="3.1">
 
     <display-name>TOPJAVA</display-name>
+    
+    <!--Spring configuration-->
+    <!--there is root application context = servletcontext
+    there are contain common beans for webapp-->
+    <!--можно и вручную в контекст-листенере инициализировать  спринг контекст-->
+
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/beans.xml</param-value>
+        <param-value>classpath:beans.xml</param-value>
     </context-param>
-    <!--<listener>
-        <listener-class>org.springframework.</listener-class>
-    </listener>-->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+   <!-- а это основной  сервлет спринга MVC , который принимает все запросы и выбирает контроллеры. Таких может быть много-->
+<!--    <servlet>
+        <servlet-name>dispatcherServlet1</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+      &lt;!&ndash;  Это мы указываем путь для спринг контекста конкретного сервлета , он под рутом в иерархии..
+        тут свои специфичные бины для сервлета&ndash;&gt;
+        &lt;!&ndash;дефолтно ищется файл "servletname-servlet.xml" в /Web-INF&ndash;&gt;
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/servlet1-context.xml</param-value>
+            &lt;!&ndash;можно указывать несколько файлов конфигурации или объеденить их в одном через import resource="config1.xml"&ndash;&gt;
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet1</servlet-name>
+        <url-pattern>*.htm</url-pattern>
+    </servlet-mapping>
+    &lt;!&ndash;другой сервлет со своим веб-контекстом&ndash;&gt;
+    <servlet>
+        <servlet-name>dispatcherServlet2</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+        &lt;!&ndash;  Это мы указываем путь для спринг контекста конкретного сервлета , он под рутом в иерархии..
+          тут свои специфичные бины для сервлета&ndash;&gt;
+        &lt;!&ndash;дефолтно ищется файл "servletname-servlet.xml" в /Web-INF&ndash;&gt;
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/servlet2-context.xml</param-value>
+            &lt;!&ndash;можно указывать несколько файлов конфигурации или объеденить их в одном через import resource="config1.xml"&ndash;&gt;
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet2</servlet-name>
+        <url-pattern>/d2/</url-pattern>
+    </servlet-mapping>-->
 
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
@@ -53,7 +96,7 @@
 </injection-target>-->
         <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
-    <resource-ref>
+    <!--<resource-ref>
         <description>testik</description>
         <res-ref-name>testResourceBean</res-ref-name>
         <res-type>ru.headrich.topjava.TestResourceBean</res-type>
@@ -66,7 +109,16 @@
         <res-type>ru.headrich.topjava.TestDependResourceBean</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
-    </resource-ref>
+    </resource-ref>-->
+    
+    <persistence-unit-ref>
+        <persistence-unit-ref-name>topjava</persistence-unit-ref-name>
+        <persistence-unit-name>topjava</persistence-unit-name>
+    </persistence-unit-ref>
+    <persistence-context-ref>
+        <persistence-context-ref-name>topjavaContext</persistence-context-ref-name>
+        <persistence-unit-name>topjava</persistence-unit-name>
+    </persistence-context-ref>
 
 
     <!-- В общем соль в том что корень директория -webapp. В ней и лежит фалй сервлета index.

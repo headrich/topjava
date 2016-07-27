@@ -3,7 +3,17 @@ package ru.headrich.topjava.web.mvc.webflow;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.web.servlet.view.tiles2.SpringBeanPreparerFactory;
 import ru.headrich.topjava.ResBean;
 import ru.headrich.topjava.TestDependResourceBean;
 import ru.headrich.topjava.TestResourceBean;
@@ -32,8 +42,18 @@ import java.util.Arrays;
 /**
  * Created by Montana on 04.07.2016.
  */
-@WebServlet(urlPatterns = {"/login","/logout","/logout/*","/login/*"})
-public class LoginController extends HttpServlet {
+@Configurable(dependencyCheck=true)
+@Component
+@WebServlet(urlPatterns = {"/login","/logout","/logout/*","/login/*"},loadOnStartup = 1)
+public class LoginController extends HttpServlet implements ApplicationContextAware { //полно всяких aware интерфейсов чтоб получить инфу о системных бинах. классно
+    public Logger getLOG() {
+        return LOG;
+    }
+
+    public void setLOG(Logger LOG) {
+        this.LOG = LOG;
+    }
+
     @Logging
     Logger LOG;
     //= LoggerFactory.getLogger(LoginController.class);
@@ -46,13 +66,21 @@ public class LoginController extends HttpServlet {
     //= new UserServiceImpl(new UserRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory())); //это не di
     //JNDI не может связать один ресурс с другим, по крайней мере томкат не может этого сделать. Можно доставать лукапом только если
     // с типизацией все впорядке.
-    @Resource(name="testResourceBean")
+    //@Resource(name="testResourceBean")
+    @Autowired(required = false)
+    @Qualifier("testResourceBean")
     TestResourceBean trb;
 
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext (this);
+
+        //super.init();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LOG.info(trb.getFullyName());
+        LOG.info(trb.getFullyName()); // это не trb null , это LOG нулл, почему постпроцессор не робит чтоли? trb тоже null что за
         LOG.info(req.getServletPath());
         LOG.info(req.getRequestURI());
         String returnPage = req.getServletPath();
@@ -209,4 +237,9 @@ public class LoginController extends HttpServlet {
 
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        //LOG.info("Application context for loginController is : "+ applicationContext.getDisplayName());
+        //System.out.println("applicationContext LC  isnull "  + applicationContext==null);
+    }
 }

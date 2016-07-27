@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ReflectionUtils;
+import static org.springframework.util.ReflectionUtils.*;
 import ru.headrich.topjava.util.annotations.Logging;
 
 /**
@@ -19,11 +19,11 @@ public class LoggingPostProcessor implements BeanPostProcessor {
 
         Class beanClass = o.getClass();
 
-        ReflectionUtils.doWithFields(beanClass,field -> {
-            field.setAccessible(true);
-            field.set(o, LoggerFactory.getLogger(beanClass));
+       doWithFields(beanClass,field -> {
+            makeAccessible(field);
+            setField(field,o,LoggerFactory.getLogger(beanClass));
         },field ->
-            field.isAnnotationPresent(Logging.class) && field.getClass().equals(Logger.class)
+            field.isAnnotationPresent(Logging.class) && Logger.class.equals(field.getType())
         );
 
         return o;

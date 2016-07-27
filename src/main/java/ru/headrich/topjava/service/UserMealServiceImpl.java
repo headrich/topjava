@@ -1,5 +1,7 @@
 package ru.headrich.topjava.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.headrich.topjava.model.UserMeal;
@@ -20,7 +22,9 @@ public class UserMealServiceImpl implements UserMealService {
     public UserMealServiceImpl() {
     }
 
-    @Inject
+   /* @Inject
+    @Qualifier(value = "umr")*/
+   @Autowired
     private UserMealRepository userMealRepository;
 
     public void setUserMealRepository(UserMealRepository userMealRepository) {

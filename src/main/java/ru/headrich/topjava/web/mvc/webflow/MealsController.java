@@ -1,6 +1,7 @@
 package ru.headrich.topjava.web.mvc.webflow;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.WebApplicationContext;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
 import ru.headrich.topjava.repository.JPA.UserMealRepositoryImpl;
@@ -22,6 +23,10 @@ import java.io.IOException;
  */
 @WebServlet(name = "MealsController", urlPatterns = {"/meals","/meals/*"})
 public class MealsController extends HttpServlet {
+
+    @Autowired
+    WebApplicationContext webApplicationContext;
+
     @Autowired
     UserMealService ums;
     //= new UserMealServiceImpl(new UserMealRepositoryImpl(JPAHandlerUtil.buildEntityManagerFactory()));

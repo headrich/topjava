@@ -4,7 +4,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.NamedQuery;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import ru.headrich.topjava.model.Role;
 import ru.headrich.topjava.model.User;
@@ -27,11 +29,16 @@ import java.util.*;
 public class UserMealRepositoryImpl implements UserMealRepository {
 
     @Inject
+            //обойдемся без Qulifer, т.к исполльзую @Primary
+    //@Qualifier(value = "emf") //Spring qualifier позволяет указать имя. в CDI эта аннотация нужна лишь для создания другой аннотации.
     EntityManagerFactory emf;
     Session s;
     Connection currentConnection;
+
+
     public UserMealRepositoryImpl() {
-        emf = JPAHandlerUtil.buildEntityManagerFactory();
+
+        //emf = JPAHandlerUtil.buildEntityManagerFactory();
     }
 
     public UserMealRepositoryImpl(EntityManagerFactory emf) {
